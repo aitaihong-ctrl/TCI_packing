@@ -30,7 +30,7 @@
                 <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200 drop-shadow-sm">TCI停車位管理系統</h1>
                 <p class="text-[10px] text-indigo-200 mt-1 flex items-center gap-1.5 font-medium">
                     <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span></span>
-                    <span id="header-status-text">系統即時連線中...</span>
+                    <span id="header-status-text">系統載入中...</span>
                 </p>
             </div>
             <div class="flex flex-col items-end gap-1.5">
@@ -59,7 +59,7 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 -->
+        <!-- 停車場主視圖 (預設開啟模糊背景) -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -92,11 +92,12 @@
         </nav>
     </div>
 
-    <!-- 首次登入視窗 -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm hidden fade-in">
+    <!-- 首次登入視窗 (預設直接顯示，沒有 hidden 屬性) -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -105,7 +106,7 @@
             <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">員工工號 (Emp ID)</label>
-                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="例如: 10243">
+                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="請輸入工號">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">密碼</label>
@@ -131,13 +132,13 @@
                     <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
                 <h2 class="text-xl font-black text-white tracking-wide relative z-10">安全性要求</h2>
-                <p class="text-xs text-rose-100 mt-2 font-medium relative z-10">偵測到預設密碼，請立即變更以保障帳號安全</p>
+                <p class="text-xs text-rose-100 mt-2 font-medium relative z-10">系統偵測此為首次綁定，請立即變更初始密碼</p>
             </div>
             <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">設定新密碼</label>
                     <div class="relative">
-                        <input type="password" id="force-new-password" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 pr-12 text-sm focus:ring-2 focus:ring-rose-500/50 outline-none shadow-sm placeholder:text-slate-300" placeholder="至少4碼新密碼">
+                        <input type="password" id="force-new-password" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 pr-12 text-sm focus:ring-2 focus:ring-rose-500/50 outline-none shadow-sm" placeholder="至少4碼新密碼">
                         <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-rose-600 focus:outline-none" onclick="togglePassword('force-new-password', this)">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </button>
@@ -149,12 +150,12 @@
         </div>
     </div>
 
-    <!-- 個人設定視窗 -->
+    <!-- 一般變更密碼視窗 -->
     <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 z-[120] hidden flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative">
             <div class="p-5 bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-base flex justify-between items-center">
-                <span>個人設定</span>
-                <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-300 hover:text-white">&times;</button>
+                <span class="flex items-center gap-2"><svg class="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> 個人設定</span>
+                <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-300 hover:text-white"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
             </div>
             <div class="p-7 space-y-4 bg-slate-50/50">
                 <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl mb-4">
@@ -175,12 +176,12 @@
         </div>
     </div>
 
-    <!-- 明細報表 -->
+    <!-- 報表明細視窗 -->
     <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] hidden flex-col slide-in-bottom">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="font-bold text-sm">返回</button>
+            <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide" id="report-title">預約明細表</h2>
-            <button onclick="exportCSV()" class="bg-indigo-600/90 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm border border-indigo-400/50">匯出 CSV</button>
+            <button onclick="exportCSV()" class="bg-indigo-600/90 px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm border border-indigo-400/50">匯出 CSV</button>
         </header>
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
@@ -200,10 +201,10 @@
         </div>
     </div>
 
-    <!-- 總務後台 -->
+    <!-- 總務後台視窗 -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] hidden flex-col slide-in-bottom">
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm">返回</button>
+            <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
             <button onclick="showHistoryPanel()" class="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold border border-white/20">歷史紀錄</button>
         </header>
@@ -219,17 +220,17 @@
         </div>
     </div>
 
-    <!-- 歷史紀錄 -->
+    <!-- 歷史紀錄查詢視窗 -->
     <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] hidden flex-col slide-in-bottom">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="font-bold text-sm">返回</button>
+            <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide">系統歷史紀錄</h2><div class="w-16"></div>
         </header>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
                     <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0">
-                        <tr><th class="py-3 px-2">時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
+                        <tr><th class="py-3 px-2">發生時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                 </table>
@@ -237,7 +238,7 @@
         </div>
     </div>
 
-    <!-- 後台編輯 -->
+    <!-- 後台編輯視窗 -->
     <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
@@ -319,12 +320,12 @@
         }
 
         // ==========================================
-        // 🔄 網路連線核心 (強制執行 API 請求)
+        // 🔄 網路連線核心
         // ==========================================
         async function fetchWithRetry(url, options = {}, retries = 2, delay = 500) {
             try {
                 const response = await fetch(url, options);
-                if (!response.ok) throw new Error('伺服器未正確回傳資料');
+                if (!response.ok) throw new Error('伺服器未回傳正確資料');
                 return await response.json();
             } catch (error) {
                 if (retries === 1) throw error; 
@@ -353,10 +354,17 @@
         window.onload = function() {
             const isIframe = window !== window.parent;
             
-            // 預覽視窗防護，避免 Canvas preview 拋出 Error
+            // 安全防護機制：如果 LIFF 或是網路卡住超過 2.5 秒，強制執行資料載入確保有畫面
+            let fallbackTimer = setTimeout(() => {
+                document.getElementById('header-status-text').innerText = "連線檢查中...";
+                fetchCloudData();
+            }, 2500);
+
+            // 預覽視窗防護，略過 LIFF 跳轉避免無窮迴圈
             if (isIframe) {
+                clearTimeout(fallbackTimer);
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
-                document.getElementById('header-status-text').innerText = "預覽連線中...";
+                document.getElementById('header-status-text').innerText = "預覽載入中...";
                 fetchCloudData();
                 return;
             }
@@ -366,12 +374,14 @@
                     liff.login();
                 } else {
                     liff.getProfile().then(profile => {
+                        clearTimeout(fallbackTimer);
                         currentUserLineId = profile.userId;
                         document.getElementById('user-display').innerText = "連線中...";
                         fetchCloudData(); 
                     });
                 }
             }).catch(err => { 
+                clearTimeout(fallbackTimer);
                 document.getElementById('user-display').innerText = "LIFF 錯誤"; 
                 fetchCloudData(); 
             });
@@ -391,6 +401,7 @@
         }
 
         async function fetchCloudData() {
+            document.getElementById('header-status-text').innerText = "連線中...";
             try {
                 const res = await fetchWithRetry(`${GAS_API_URL}?action=getData&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
                 
@@ -404,22 +415,24 @@
                         if (res.user.requirePasswordChange) {
                             document.getElementById('login-modal').classList.add('hidden');
                             document.getElementById('force-password-modal').classList.remove('hidden');
-                            document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI();
                         }
                     } else {
+                        // 未登入綁定狀態：顯示登入框並維持背景模糊
                         document.getElementById('login-modal').classList.remove('hidden');
-                        document.getElementById('scroll-area').classList.add('blur-bg');
                     }
                 } else {
                     throw new Error(res.message);
                 }
             } catch (err) {
+                // 網路錯誤攔截：UI 引導提示
+                document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
-                document.getElementById('scroll-area').classList.add('blur-bg');
+                
                 const errorMsg = document.getElementById('login-error-msg');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 網路連線失敗，請檢查 GAS 部署設定。</div>`;
+                document.getElementById('btn-login-submit').classList.remove('hidden');
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-left p-3 rounded-lg shadow-sm border border-rose-200 mt-2"><p class="font-bold text-rose-600 text-xs mb-1">❌ 網路連線被阻擋 (Failed to fetch)</p><p class="text-[11px] text-rose-500 mb-2">請確認您的 Google Apps Script 已經「發布為新版本」且權限設為「所有人」。</p><button onclick="window.open(location.href, '_blank')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-xs transition-colors">🚀 點此跳出預覽環境測試</button></div>`;
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -462,12 +475,14 @@
         async function submitForcedPassword() {
             const newPwd = document.getElementById('force-new-password').value;
             const errorMsg = document.getElementById('force-error-msg');
+            const oldPwdInput = document.getElementById('login-password');
+            const currentOldPwd = oldPwdInput ? oldPwdInput.value : "";
 
             if (!newPwd || newPwd.length < 4) {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 密碼不能為空，且至少需4碼！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
-            if (newPwd === "1234" || newPwd === "Aa123456") {
+            if (newPwd === currentOldPwd || newPwd === "1234" || newPwd === "Aa123456") {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 新密碼不可與預設密碼相同！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
@@ -475,7 +490,7 @@
             const btn = document.getElementById('btn-force-submit');
             btn.innerText = "變更中...";
             const res = await apiRequest("changePassword", { newPassword: newPwd });
-            btn.innerText = "確認變更並進入系統";
+            btn.innerText = "確認變更並進入";
 
             if (res.success) {
                 errorMsg.classList.add('hidden');
@@ -495,13 +510,11 @@
             if (res.success) {
                 document.getElementById('settings-modal').classList.add('hidden');
                 showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次重新綁定裝置時請使用新密碼。</span>', 'success', null, '關閉');
-            } else {
-                showModal('錯誤', res.message, 'error');
-            }
+            } else { showModal('錯誤', res.message, 'error'); }
         }
 
         // ==========================================
-        // 核心地圖繪製與操作
+        // 核心地圖操作邏輯
         // ==========================================
         function switchDateTab(tab) {
             activeDateTab = tab;
@@ -629,13 +642,13 @@
         }
 
         // ==========================================
-        // 頁面與報表
+        // 選單與報表邏輯
         // ==========================================
-        function switchMainTab(tab) { hideModal(); document.getElementById('report-modal').classList.add('hidden'); document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('history-modal').classList.add('hidden'); }
+        function switchMainTab() { hideModal(); document.getElementById('report-modal').classList.add('hidden'); document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('history-modal').classList.add('hidden'); }
 
         function showMyReservation() {
             if (!currentUserEmpId) return;
-            if (isAdmin) { showModal('管理員', '您目前以總務管理員身分登入，無個人預約紀錄。', 'info', null, '關閉'); return; }
+            if (isAdmin) { showModal('管理員身分', '您目前以總務管理員身分登入，無個人預約紀錄。', 'info', null, '關閉'); return; }
 
             let msg = '';
             ['today', 'tomorrow'].forEach(day => {
@@ -644,22 +657,19 @@
                 const booked = db[day].find(s => s.status === 'mine' || (s.status === 'reserved' && s.reserverId === currentUserEmpId));
                 const released = db[day].filter(s => s.ownerId === currentUserEmpId && (s.status === 'available' || s.status === 'reserved'));
                 if (booked || released.length > 0) {
-                    msg += `<div class="bg-white p-4 rounded-2xl mb-3 border border-slate-100 shadow-sm relative overflow-hidden">`;
-                    if(booked) msg += `<div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>`;
-                    else msg += `<div class="absolute top-0 left-0 w-1 h-full bg-emerald-400"></div>`;
-                    msg += `<p class="font-black text-xs text-slate-400 tracking-wider mb-2">${dayLabel} 狀態</p>`;
+                    msg += `<div class="bg-white p-4 rounded-2xl mb-3 border border-slate-100 shadow-sm relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full ${booked?'bg-indigo-500':'bg-emerald-400'}"></div><p class="font-black text-xs text-slate-400 tracking-wider mb-2">${dayLabel} 狀態</p>`;
                     if(booked) msg += `<p class="text-sm font-bold text-slate-700">成功預約: <b class="text-indigo-600 text-base">${booked.displayId || booked.id}</b> <br><span class="text-xs font-normal text-slate-500 font-mono">(${booked.reserverPlate || booked.myPlate})</span></p>`;
                     if(released.length > 0) msg += `<p class="text-sm font-bold text-slate-700 mt-1">已釋出: <b class="text-emerald-500 text-base">${released.map(s=>(s.displayId||s.id)).join(', ')}</b></p>`;
                     msg += `</div>`;
                 }
             });
             if (msg === '') msg = `<div class="text-center py-8 text-slate-400"><p class="font-bold">今日與明日皆無紀錄</p></div>`;
-            showModal('我的紀錄', msg, 'info', null, '關閉');
+            showModal('我的預約與釋出', msg, 'info', null, '關閉');
         }
 
         function showDailyReport() {
             if (!currentUserEmpId) return;
-            switchMainTab('none');
+            switchMainTab();
             document.getElementById('report-title').innerText = `${activeDateTab==='today'?'今日':'明日'} 預約明細表`;
             const tbody = document.getElementById('report-tbody');
             tbody.innerHTML = ''; 
@@ -724,12 +734,12 @@
         }
 
         // ==========================================
-        // 後台管理 
+        // 總務管理後台 
         // ==========================================
         let editingSpotId = null;
         function showAdminPanel() {
             if (!isAdmin) return;
-            switchMainTab('none');
+            switchMainTab();
             const tbody = document.getElementById('admin-tbody');
             tbody.innerHTML = ''; 
             (db.today || []).forEach(spot => {
