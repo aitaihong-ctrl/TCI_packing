@@ -917,4 +917,19 @@
                 return { success: true };
             }
             if (action === "adminUpdate") {
-                ['today', 'tomorrow'].forEach
+                ['today', 'tomorrow'].forEach(day => {
+                    const s = db[day].find(x => x.sysId === payload.sysId);
+                    s.displayId = payload.displayId;
+                    if (payload.type === 'guest') { s.ownerId = 'GUEST'; s.ownerName = '總務處'; s.ownerPlate = payload.ownerPlate; s.status = 'guest'; } 
+                    else { s.ownerId = payload.ownerId; s.ownerName = payload.ownerName; s.ownerPlate = payload.ownerPlate; s.status = 'fixed'; }
+                    s.reserverId = null; s.reserverName = null; s.reserverPlate = null; s.myPlate = null; s.releaseTime = null; s.reserveTime = null;
+                    historyDb.push({ timestamp: ts, dateTab: day, action: '管理員修改', sysId: s.sysId, displayId: s.displayId, actor: 'ADMIN', details: '總務強制變更資料' });
+                });
+                return { success: true };
+            }
+            return { success: false, message: "不支援的模擬 action" };
+        }
+        function getRandomName() { const lastNames = ['陳','林','黃','張','李','王','吳','劉','蔡','楊']; const firstNames = ['大衛','小明','雅婷','家豪','志明','春嬌','淑芬','柏翰','冠宇','子晴']; return lastNames[Math.floor(Math.random()*lastNames.length)] + firstNames[Math.floor(Math.random()*firstNames.length)]; }
+    </script>
+</body>
+</html>
