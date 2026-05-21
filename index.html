@@ -9,122 +9,194 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        .slide-in-bottom { animation: slideInBottom 0.3s forwards ease-out; }
+        .fade-in { animation: fadeIn 0.25s ease-out; }
+        .slide-in-bottom { animation: slideInBottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .writing-vertical { writing-mode: vertical-rl; text-orientation: upright; }
-        .blur-bg { filter: blur(4px); pointer-events: none; }
-        .tab-active { border-bottom: 3px solid #4f46e5; color: #4f46e5; font-weight: bold; }
-        .tab-inactive { border-bottom: 3px solid transparent; color: #6b7280; font-weight: normal; }
+        .blur-bg { filter: blur(6px); pointer-events: none; }
+        .tab-active { border-bottom: 3px solid #4f46e5; color: #4f46e5; font-weight: 800; }
+        .tab-inactive { border-bottom: 3px solid transparent; color: #9ca3af; font-weight: 500; }
+        button { transition: transform 0.1s ease, background-color 0.2s ease; }
+        button:active { transform: scale(0.96); }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans antialiased min-h-screen flex justify-center">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex justify-center selection:bg-indigo-100">
 
-    <div class="w-full max-w-md bg-white shadow-xl min-h-screen relative overflow-hidden flex flex-col">
+    <div class="w-full max-w-md bg-white shadow-2xl min-h-screen relative overflow-hidden flex flex-col">
         
-        <header class="bg-indigo-900 text-white p-4 pb-3 shadow-md z-20 flex justify-between items-center relative shrink-0">
+        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center relative shrink-0">
             <div>
-                <h1 class="text-xl font-bold tracking-wide">TechCorp B1 停車場</h1>
-                <p class="text-[10px] text-indigo-200 mt-1 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    目前模擬時間: 
-                    <select id="time-simulator" class="bg-indigo-800 text-white border border-indigo-500 rounded px-1 outline-none text-[10px]" onchange="handleTimeChange()">
-                        <option value="10">10:00 (18:00前)</option>
-                        <option value="19">19:00 (18:00後)</option>
-                    </select>
+                <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200 drop-shadow-sm">TechCorp B1 停車場</h1>
+                <p class="text-[10px] text-indigo-200 mt-1 flex items-center gap-1.5 font-medium">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                    </span>
+                    系統即時連線中...
                 </p>
             </div>
-            <div class="flex flex-col items-end">
-                <div class="bg-indigo-800/80 px-3 py-1.5 rounded-full border border-indigo-500/50 flex items-center gap-2 shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-red-400" id="status-dot"></span>
+            <div class="flex flex-col items-end gap-1.5">
+                <div class="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-inner">
+                    <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_rgba(251,113,133,0.8)]" id="status-dot"></span>
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
+                <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </button>
             </div>
         </header>
 
-        <div class="bg-white flex w-full border-b border-gray-200 shrink-0 z-20 shadow-sm" id="date-tabs">
-            <button id="tab-today" class="flex-1 py-3 text-sm tab-active transition-colors" onclick="switchDateTab('today')">今日 (<span id="date-today-str"></span>)</button>
-            <button id="tab-tomorrow" class="flex-1 py-3 text-sm tab-inactive transition-colors" onclick="switchDateTab('tomorrow')">明日 (<span id="date-tomorrow-str"></span>)</button>
+        <div class="bg-white flex w-full border-b border-gray-100 shrink-0 z-20 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]" id="date-tabs">
+            <button id="tab-today" class="flex-1 py-3.5 text-sm tab-active transition-colors hover:bg-slate-50" onclick="switchDateTab('today')">今日 (<span id="date-today-str"></span>)</button>
+            <button id="tab-tomorrow" class="flex-1 py-3.5 text-sm tab-inactive transition-colors hover:bg-slate-50" onclick="switchDateTab('tomorrow')">明日 (<span id="date-tomorrow-str"></span>)</button>
         </div>
 
-        <div class="bg-slate-50 p-2 border-b border-gray-200 shadow-sm z-20 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[10px] font-bold shrink-0" id="legend-area">
-            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-gray-100 border border-gray-300 block"></span><span class="text-gray-500">未釋出</span></div>
-            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-white border border-green-500 block"></span><span class="text-green-700">可預約</span></div>
-            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-amber-100 border border-amber-500 block"></span><span class="text-amber-700">我的專屬</span></div>
-            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-indigo-500 border border-indigo-600 block"></span><span class="text-indigo-700">我的預約</span></div>
-            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-purple-50 border border-purple-300 block"></span><span class="text-purple-600">來賓保留</span></div>
+        <div class="bg-slate-50/80 p-2.5 border-b border-gray-200 z-20 flex flex-wrap justify-center gap-x-3.5 gap-y-1.5 text-[10px] font-bold shrink-0" id="legend-area">
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300 shadow-sm block"></span><span class="text-gray-500">未釋出</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">我的預約</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-500" id="scroll-area">
+        <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
                 <rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" />
                 <rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" />
             </svg>
-            <div class="relative z-10 w-full flex justify-between px-2 py-12 h-max">
-                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-70 tracking-[0.3em]">入口方向 &darr;</div></div>
-                <div id="zone-A" class="flex flex-col gap-1 w-[26%] my-6"></div>
-                <div class="w-[4%] flex justify-center"><div class="w-1.5 bg-slate-300 rounded-full my-12 shadow-inner"></div></div>
-                <div id="zone-B" class="flex flex-col gap-1 w-[26%] my-6"></div>
-                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-70 tracking-[0.3em]">&uarr; 出口方向</div></div>
+            <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
+                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">Entrance &darr;</div></div>
+                <div id="zone-A" class="flex flex-col gap-1.5 w-[26%] my-6"></div>
+                <div class="w-[4%] flex justify-center"><div class="w-2 bg-slate-300/80 rounded-full my-12 shadow-inner"></div></div>
+                <div id="zone-B" class="flex flex-col gap-1.5 w-[26%] my-6"></div>
+                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">&uarr; Exit</div></div>
             </div>
         </main>
 
-        <nav class="bg-white border-t border-gray-200 flex justify-around p-2 pb-4 shadow-[0_-5px_10px_rgba(0,0,0,0.03)] z-20 shrink-0">
+        <nav class="bg-white border-t border-gray-100 flex justify-around p-2 pb-5 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] z-20 shrink-0">
             <button class="flex-1 flex flex-col items-center text-indigo-600 transition-colors hover:text-indigo-800" onclick="switchMainTab('map')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                <span class="text-[10px] mt-1 font-bold">停車地圖</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                <span class="text-[10px] font-extrabold tracking-wide">停車地圖</span>
             </button>
-            <button class="flex-1 flex flex-col items-center text-gray-500 hover:text-indigo-600 transition-colors" onclick="showMyReservation()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                <span class="text-[10px] mt-1 font-bold">我的預約</span>
+            <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showMyReservation()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                <span class="text-[10px] font-extrabold tracking-wide">我的預約</span>
             </button>
-            <button class="flex-1 flex flex-col items-center text-gray-500 hover:text-indigo-600 transition-colors" onclick="showDailyReport()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                <span class="text-[10px] mt-1 font-bold">明細報表</span>
+            <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showDailyReport()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span class="text-[10px] font-extrabold tracking-wide">明細報表</span>
             </button>
-            <button id="nav-admin-btn" class="flex-1 flex flex-col items-center text-rose-500 hover:text-rose-700 transition-colors hidden" onclick="showAdminPanel()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                <span class="text-[10px] mt-1 font-bold">管理後台</span>
+            <button id="nav-admin-btn" class="flex-1 flex flex-col items-center text-rose-400 hover:text-rose-600 transition-colors hidden" onclick="showAdminPanel()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                <span class="text-[10px] font-extrabold tracking-wide">總務管理</span>
             </button>
         </nav>
     </div>
 
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/80 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden fade-in relative">
-            <div class="bg-indigo-600 p-6 text-center">
-                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg></div>
-                <h2 class="text-xl font-bold text-white">LINE 帳號綁定</h2>
-                <p id="login-tip" class="text-xs text-indigo-200 mt-1">首次使用，請先驗證您的員工工號</p>
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in hidden">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative border border-white/20">
+            <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
+                </div>
+                <h2 class="text-2xl font-black text-white tracking-wide relative z-10">系統登入綁定</h2>
+                <p class="text-xs text-indigo-100 mt-2 font-medium relative z-10">首次使用，請驗證您的員工工號</p>
             </div>
-            <div class="p-6 space-y-4">
+            <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">員工工號 (Emp ID)</label>
-                    <input type="text" id="login-emp-id" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 uppercase font-mono" placeholder="測試: EMP001 / 管理員: ADMIN">
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">員工工號 (Emp ID)</label>
+                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none uppercase font-mono shadow-sm transition-all placeholder:text-slate-300" placeholder="例如: EMP001">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">驗證密碼</label>
-                    <input type="password" id="login-password" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500" placeholder="統一預設密碼: 1234">
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">驗證密碼</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 pr-12 text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none shadow-sm transition-all placeholder:text-slate-300" placeholder="預設密碼: 1234">
+                        <button type="button" onclick="togglePassword('login-password', 'eye-icon-login')" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none">
+                            <svg id="eye-icon-login" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <p id="login-error-msg" class="text-rose-500 text-xs font-bold text-center hidden"></p>
-                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md transition-colors mt-2">立即登入</button>
+                <p id="login-error-msg" class="text-rose-500 text-xs font-bold text-center hidden bg-rose-50 p-2 rounded-lg"></p>
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 transition-all mt-4 text-sm tracking-wide">驗證並綁定</button>
             </div>
         </div>
     </div>
 
-    <div id="report-modal" class="fixed inset-0 bg-gray-100 z-[70] hidden flex-col slide-in-bottom">
-        <header class="bg-slate-800 text-white p-4 shadow-md flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="flex items-center gap-1 text-slate-300 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
-            <h2 class="text-lg font-bold tracking-wide" id="report-title">預約明細表</h2>
-            <button onclick="exportCSV()" class="bg-indigo-600 px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1 hover:bg-indigo-500 shadow-sm border border-indigo-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>匯出 CSV</button>
+    <div id="force-password-modal" class="fixed inset-0 bg-slate-900/60 z-[110] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in hidden">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative border border-white/20">
+            <div class="bg-gradient-to-br from-rose-600 to-rose-800 p-8 text-center relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                </div>
+                <h2 class="text-xl font-black text-white tracking-wide relative z-10">安全性要求</h2>
+                <p class="text-xs text-rose-100 mt-2 font-medium relative z-10">偵測到預設密碼，請立即變更以保障帳號安全</p>
+            </div>
+            <div class="p-7 space-y-5 bg-slate-50/50">
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">設定新密碼</label>
+                    <div class="relative">
+                        <input type="password" id="force-new-password" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 pr-12 text-sm focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 outline-none shadow-sm transition-all placeholder:text-slate-300" placeholder="請輸入至少4碼新密碼">
+                        <button type="button" onclick="togglePassword('force-new-password', 'eye-icon-force')" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-rose-600 transition-colors focus:outline-none">
+                            <svg id="eye-icon-force" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <p id="force-error-msg" class="text-rose-500 text-xs font-bold text-center hidden bg-rose-50 p-2 rounded-lg"></p>
+                <button onclick="submitForcedPassword()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-slate-200 transition-all mt-4 text-sm tracking-wide">確認變更並進入系統</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 z-[95] hidden flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative">
+            <div class="p-5 bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-base flex justify-between items-center">
+                <span class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> 個人設定</span>
+                <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-300 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+            </div>
+            <div class="p-7 space-y-4 bg-slate-50/50">
+                <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl mb-4">
+                    <p class="text-xs text-indigo-400 font-bold mb-1">目前登入身分</p>
+                    <p class="text-sm font-black text-indigo-800" id="settings-user-info"></p>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">設定新密碼</label>
+                    <div class="relative">
+                        <input type="password" id="new-password" class="w-full bg-white border border-slate-200 rounded-xl p-3 pr-12 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none shadow-sm placeholder:text-slate-300" placeholder="請輸入新密碼">
+                        <button type="button" onclick="togglePassword('new-password', 'eye-icon-new')" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-indigo-600 focus:outline-none">
+                            <svg id="eye-icon-new" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-2 ml-1">※ 變更密碼僅供未來換手機或換 LINE 帳號重新綁定時使用。</p>
+                </div>
+                <button onclick="apiChangePassword()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition-all mt-4 text-sm">儲存新密碼</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] hidden flex-col slide-in-bottom">
+        <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
+            <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="flex items-center gap-1 text-slate-300 hover:text-white font-bold text-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
+            <h2 class="text-base font-black tracking-wide" id="report-title">預約明細表</h2>
+            <button onclick="exportCSV()" class="bg-indigo-600/90 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 hover:bg-indigo-500 shadow-sm border border-indigo-400/50"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>匯出 CSV</button>
         </header>
         
-        <div class="bg-white p-3 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
-            <span class="text-xs font-bold text-gray-600 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+        <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
+            <span class="text-xs font-extrabold text-slate-600 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
                 篩選狀態：
             </span>
-            <select id="report-filter" class="text-xs border border-gray-300 rounded p-1.5 outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50 font-medium" onchange="showDailyReport()">
+            <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none focus:ring-2 focus:ring-indigo-500/50 bg-slate-50 font-bold text-slate-700 shadow-sm" onchange="showDailyReport()">
                 <option value="all">全部顯示 (All)</option>
                 <option value="available">可預約 (已釋出空位)</option>
                 <option value="reserved">已被預約</option>
@@ -133,122 +205,122 @@
             </select>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-2 no-scrollbar">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-100 text-slate-600 border-b border-gray-200 sticky top-0 shadow-sm">
+                    <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 sticky top-0 shadow-sm">
                         <tr>
-                            <th class="py-3 px-2 font-bold w-[12%] text-center">車位</th>
-                            <th class="py-3 px-2 font-bold w-[18%]">狀態</th>
-                            <th class="py-3 px-2 font-bold w-[25%]">持有者</th>
-                            <th class="py-3 px-2 font-bold w-[25%]">預約者</th>
-                            <th class="py-3 px-2 font-bold w-[20%]">實際車號</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[12%] text-center">車位</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[18%]">狀態</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[25%]">持有者</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[25%]">預約者</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[20%]">實際車號</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100" id="report-tbody"></tbody>
+                    <tbody class="divide-y divide-slate-50" id="report-tbody"></tbody>
                 </table>
             </div>
-            <p class="text-[10px] text-gray-400 text-center mt-4">註: 詳細釋出與預約時間，請使用上方匯出CSV功能檢視。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-5 mb-6">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
         </div>
     </div>
 
     <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] hidden flex-col slide-in-bottom">
-        <header class="bg-rose-700 text-white p-4 shadow-md flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="flex items-center gap-1 text-rose-200 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
-            <h2 class="text-lg font-bold tracking-wide">總務管理中心</h2>
-            <button onclick="showHistoryPanel()" class="bg-rose-900 px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1 hover:bg-rose-800 shadow-sm border border-rose-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>歷史紀錄</button>
+        <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
+            <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="flex items-center gap-1 text-rose-200 hover:text-white font-bold text-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
+            <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
+            <button onclick="showHistoryPanel()" class="bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 hover:bg-white/20 shadow-sm border border-white/20 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>歷史紀錄</button>
         </header>
-        <div class="flex-1 overflow-y-auto p-2 no-scrollbar">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-100 text-slate-600 border-b border-gray-200 sticky top-0 shadow-sm">
+                    <thead class="bg-rose-50/50 text-rose-900 border-b border-rose-100 sticky top-0 shadow-sm">
                         <tr>
-                            <th class="py-3 px-2 font-bold w-[20%] text-center">車位名稱</th>
-                            <th class="py-3 px-2 font-bold w-[25%]">工號</th>
-                            <th class="py-3 px-2 font-bold w-[25%]">姓名</th>
-                            <th class="py-3 px-2 font-bold w-[15%]">車號</th>
-                            <th class="py-3 px-2 font-bold w-[15%] text-center">操作</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[20%] text-center">車位名稱</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[25%]">工號</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[25%]">姓名</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[15%]">車號</th>
+                            <th class="py-3.5 px-2 font-extrabold w-[15%] text-center">操作</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100" id="admin-tbody"></tbody>
+                    <tbody class="divide-y divide-slate-50" id="admin-tbody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] hidden flex-col slide-in-bottom">
-        <header class="bg-slate-800 text-white p-4 shadow-md flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="flex items-center gap-1 text-slate-300 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
-            <h2 class="text-lg font-bold tracking-wide">系統歷史紀錄</h2>
+        <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
+            <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="flex items-center gap-1 text-slate-300 hover:text-white font-bold text-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>返回</button>
+            <h2 class="text-base font-black tracking-wide">系統歷史紀錄</h2>
             <div class="w-16"></div>
         </header>
-        <div class="flex-1 overflow-y-auto p-2 no-scrollbar">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-100 text-slate-600 border-b border-gray-200 sticky top-0 shadow-sm">
+                    <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 shadow-sm">
                         <tr>
-                            <th class="py-2 px-2 font-bold">發生時間</th>
-                            <th class="py-2 px-2 font-bold">目標</th>
-                            <th class="py-2 px-2 font-bold">車位</th>
-                            <th class="py-2 px-2 font-bold">動作</th>
-                            <th class="py-2 px-2 font-bold">操作者</th>
+                            <th class="py-3 px-2 font-extrabold">發生時間</th>
+                            <th class="py-3 px-2 font-extrabold">目標</th>
+                            <th class="py-3 px-2 font-extrabold">車位</th>
+                            <th class="py-3 px-2 font-extrabold">動作</th>
+                            <th class="py-3 px-2 font-extrabold">操作者</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100" id="history-tbody"></tbody>
+                    <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                 </table>
             </div>
-            <p class="text-[10px] text-gray-400 text-center mt-3">僅顯示最新 100 筆紀錄，完整紀錄請至資料庫查看。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-6">僅顯示最新 100 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
-    <div id="admin-edit-modal" class="fixed inset-0 bg-black/60 z-[90] hidden flex items-center justify-center p-4 fade-in">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div class="p-3 bg-rose-600 text-white font-bold text-base flex justify-between items-center">
-                <span>編輯車位資料</span><span id="edit-sys-id" class="text-rose-200 text-xs tracking-wider"></span>
+    <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
+                <span>編輯車位資料</span><span id="edit-sys-id" class="bg-rose-900/50 px-2 py-1 rounded text-xs tracking-wider font-mono"></span>
             </div>
-            <div class="p-5 space-y-3">
+            <div class="p-6 space-y-4 bg-slate-50/50">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">車位顯示編號 (Display ID)</label>
-                    <input type="text" id="edit-display-id" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-sm font-bold text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500">
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號 (Display ID)</label>
+                    <input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">車位類型</label>
-                    <select id="edit-spot-type" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-rose-500"><option value="employee">員工專屬位</option><option value="guest">來賓保留位</option></select>
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位類型</label>
+                    <select id="edit-spot-type" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-rose-500 shadow-sm font-bold text-slate-700"><option value="employee">員工專屬位</option><option value="guest">來賓保留位</option></select>
                 </div>
-                <div id="edit-emp-fields" class="space-y-3 border-t border-gray-100 pt-3 mt-1">
-                    <div><label class="block text-xs font-bold text-gray-700 mb-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-sm uppercase font-mono"></div>
-                    <div><label class="block text-xs font-bold text-gray-700 mb-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-sm"></div>
+                <div id="edit-emp-fields" class="space-y-4 border-t border-slate-200 pt-4 mt-2">
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm shadow-sm font-bold text-slate-700"></div>
                 </div>
-                <div><label class="block text-xs font-bold text-gray-700 mb-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-gray-300 rounded-lg p-2 text-sm uppercase font-mono"></div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
             </div>
-            <div class="p-3 bg-gray-50 flex justify-end gap-2 rounded-b-xl border-t border-gray-100">
-                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-4 py-1.5 text-sm text-gray-600 bg-white border border-gray-300 rounded-md">取消</button>
-                <button onclick="saveSpotConfig()" class="px-4 py-1.5 text-sm text-white bg-rose-600 rounded-md">儲存變更</button>
+            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
+                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
+                <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-md shadow-rose-200 transition-colors">儲存變更</button>
             </div>
         </div>
     </div>
 
-    <div id="custom-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 fade-in">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div id="modal-header" class="p-3 bg-indigo-600 text-white font-bold text-base">系統提示</div>
-            <div class="p-5">
-                <p id="modal-message" class="text-gray-700 text-sm leading-relaxed">訊息內容</p>
-                <div id="plate-input-container" class="hidden mt-4">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">請輸入您的車牌號碼</label>
-                    <input type="text" id="modal-plate-input" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono" placeholder="例如: ABC-1234">
-                    <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-1 hidden">❌ 請輸入車牌號碼</p>
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 z-[95] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div id="modal-header" class="p-5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-black text-base tracking-wide">系統提示</div>
+            <div class="p-7 bg-slate-50/50">
+                <p id="modal-message" class="text-slate-700 text-sm leading-relaxed font-medium">訊息內容</p>
+                <div id="plate-input-container" class="hidden mt-5 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                    <label class="block text-xs font-extrabold text-indigo-800 mb-2">請輸入您本次停放的車牌號碼</label>
+                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono shadow-sm" placeholder="例如: ABC-1234">
+                    <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-2 hidden">❌ 請輸入車牌號碼</p>
                 </div>
             </div>
-            <div class="p-3 bg-gray-50 flex justify-end gap-2 rounded-b-xl border-t border-gray-100">
-                <button id="modal-cancel-btn" class="px-4 py-1.5 text-sm text-gray-600 bg-white border border-gray-300 rounded-md hidden">取消</button>
-                <button id="modal-confirm-btn" class="px-4 py-1.5 text-sm text-white bg-indigo-600 rounded-md shadow-sm">確定</button>
+            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
+                <button id="modal-cancel-btn" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors hidden">取消</button>
+                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-colors">確定</button>
             </div>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // ⚙️ 生產環境伺服器設定 (請依指南填入真實 URL)
+        // ⚙️ 生產環境伺服器設定 (請修改這裡！)
         // ==========================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxPRco-YOxtYnxire3nSennMl3yOt7xlXc_KnimD-Vu_K2pEzhZo2jD_OC9TWz7lhtYIw/exec"; 
         const LIFF_ID = "2010157193-q1m2pPB0"; 
@@ -260,7 +332,6 @@
         let currentUserPlate = null;
         let isAdmin = false; 
         
-        let simulatedHour = 10; 
         let activeDateTab = 'today'; 
         
         const today = new Date();
@@ -272,7 +343,27 @@
         document.getElementById('date-tomorrow-str').innerText = formatDate(tomorrow);
 
         let db = { today: [], tomorrow: [] };
-        let historyDb = []; // 本機模擬用的歷史紀錄庫
+        let historyDb = []; 
+
+        // 👁️ 密碼明暗碼切換控制器
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            }
+        }
+
+        // 開啟個人設定面板
+        function showSettingsPanel() {
+            document.getElementById('settings-user-info').innerText = `${currentUserName} (${currentUserEmpId})`;
+            document.getElementById('new-password').value = '';
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
 
         // ==========================================
         // 🔄 指數退避重試網路連線機制
@@ -294,14 +385,15 @@
 
             const url = `${GAS_API_URL}?action=${action}&lineUserId=${currentUserLineId}`;
             const options = {
-                method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json' },
+                method: 'POST', mode: 'cors', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ⚠️ 已修復 CORS
                 body: JSON.stringify({ lineUserId: currentUserLineId, empId: currentUserEmpId, empName: currentUserName, plate: currentUserPlate, ...payload })
             };
 
             try {
                 return await fetchWithRetry(url, options);
             } catch (err) {
-                showModal("連線失敗", "無法與雲端庫取得連線，請檢查網路狀態。<br><br><span class='text-[10px] text-gray-400'>" + err.toString() + "</span>", "error", null, "我知道了");
+                showModal("連線失敗", "無法與雲端庫取得連線，請檢查網路狀態。<br><br><span class='text-[10px] text-slate-400'>" + err.toString() + "</span>", "error", null, "我知道了");
                 return { success: false, message: "連線超時" };
             }
         }
@@ -311,7 +403,7 @@
         // ==========================================
         window.onload = function() {
             if (LIFF_ID.startsWith("YOUR_LIFF")) {
-                document.getElementById('status-dot').classList.replace('bg-red-400', 'bg-amber-400');
+                document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
                 document.getElementById('user-display').innerText = "模擬環境";
                 return;
             }
@@ -327,6 +419,19 @@
             }).catch(err => { document.getElementById('user-display').innerText = "LIFF 錯誤"; });
         };
 
+        // 開啟 UI 主流程
+        function unlockUI() {
+            document.getElementById('force-password-modal').classList.add('hidden');
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('scroll-area').classList.remove('blur-bg');
+            document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-emerald-400');
+            document.getElementById('status-dot').style.boxShadow = '0 0 5px rgba(52,211,153,0.8)';
+            document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
+            document.getElementById('btn-settings').classList.remove('hidden');
+            if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
+            renderParkingLot();
+        }
+
         async function fetchCloudData() {
             if (GAS_API_URL.startsWith("YOUR_GAS")) { initLocalMockData(); return; }
 
@@ -334,22 +439,22 @@
                 const res = await fetchWithRetry(`${GAS_API_URL}?action=getData&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
                 if (res.success) {
                     db.today = res.today; db.tomorrow = res.tomorrow;
-                    document.getElementById('scroll-area').classList.remove('blur-bg');
-                    document.getElementById('status-dot').classList.replace('bg-red-400', 'bg-green-400');
-
                     if (res.user) {
                         currentUserEmpId = res.user.empId; currentUserName = res.user.name; currentUserPlate = res.user.plate;
                         isAdmin = (currentUserEmpId === 'ADMIN');
-                        document.getElementById('login-modal').classList.add('hidden');
-                        document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
-                        if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
-                        renderParkingLot();
+
+                        // 【新增】檢查是否需要強制改密碼
+                        if (res.user.requirePasswordChange) {
+                            document.getElementById('login-modal').classList.add('hidden');
+                            document.getElementById('force-password-modal').classList.remove('hidden');
+                        } else {
+                            unlockUI();
+                        }
                     } else {
                         document.getElementById('login-modal').classList.remove('hidden');
-                        document.getElementById('login-tip').innerText = "首次使用，請進行一次性工號綁定";
                     }
                 }
-            } catch (err) { showModal("載入失敗", "無法同步最新停車資訊。<br><span class='text-xs text-gray-400'>" + err.toString() + "</span>", "error"); }
+            } catch (err) { showModal("載入失敗", "無法同步最新停車資訊。<br><span class='text-xs text-slate-400'>" + err.toString() + "</span>", "error"); }
         }
 
         async function handleLogin() {
@@ -363,25 +468,55 @@
             if (res.success) {
                 currentUserEmpId = res.empId; currentUserName = res.name; currentUserPlate = res.plate;
                 isAdmin = (currentUserEmpId === 'ADMIN');
-                document.getElementById('login-modal').classList.add('hidden');
-                document.getElementById('scroll-area').classList.remove('blur-bg');
-                document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
-                document.getElementById('status-dot').classList.replace('bg-red-400', 'bg-green-400');
-                if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
-                await fetchCloudData(); 
+                await fetchCloudData(); // 重新抓資料以確保車位正確，並觸發強制改密碼檢查
             } else {
                 errorMsg.innerText = `❌ ${res.message}`; errorMsg.classList.remove('hidden');
             }
         }
 
+        // 【新增】送出強制修改密碼
+        async function submitForcedPassword() {
+            const newPwd = document.getElementById('force-new-password').value;
+            const errorMsg = document.getElementById('force-error-msg');
+
+            if (!newPwd || newPwd.length < 4) {
+                errorMsg.innerText = "❌ 密碼不能為空，且至少需4碼！";
+                errorMsg.classList.remove('hidden'); return;
+            }
+            if (newPwd === "1234") {
+                errorMsg.innerText = "❌ 新密碼不可與預設密碼相同！";
+                errorMsg.classList.remove('hidden'); return;
+            }
+
+            const res = await apiRequest("changePassword", { newPassword: newPwd });
+            if (res.success) {
+                errorMsg.classList.add('hidden');
+                unlockUI(); // 修改成功，正式解鎖 UI
+                showModal('安全性設定完成', '密碼變更成功，歡迎進入系統！', 'success', null, '關閉');
+            } else {
+                errorMsg.innerText = `❌ ${res.message}`; errorMsg.classList.remove('hidden');
+            }
+        }
+
+        // 一般個人設定內的變更密碼
+        async function apiChangePassword() {
+            const newPwd = document.getElementById('new-password').value;
+            if (!newPwd || newPwd.length < 4) { alert("密碼不能為空，且至少需4碼！"); return; }
+            
+            const res = await apiRequest("changePassword", { newPassword: newPwd });
+            if (res.success) {
+                document.getElementById('settings-modal').classList.add('hidden');
+                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次重新綁定裝置時請使用新密碼。</span>', 'success', null, '關閉');
+            } else { showModal('錯誤', res.message, 'error'); }
+        }
+
         // ==========================================
-        // 🔒 前端互動與時間規則防呆邏輯
+        // 🔒 前端互動防呆邏輯 (使用真實系統時間)
         // ==========================================
-        function handleTimeChange() { simulatedHour = parseInt(document.getElementById('time-simulator').value); renderParkingLot(); }
         function switchDateTab(tab) {
             activeDateTab = tab;
-            document.getElementById('tab-today').className = (tab === 'today') ? "flex-1 py-3 text-sm tab-active transition-colors" : "flex-1 py-3 text-sm tab-inactive transition-colors bg-gray-50";
-            document.getElementById('tab-tomorrow').className = (tab === 'tomorrow') ? "flex-1 py-3 text-sm tab-active transition-colors" : "flex-1 py-3 text-sm tab-inactive transition-colors bg-gray-50";
+            document.getElementById('tab-today').className = (tab === 'today') ? "flex-1 py-3.5 text-sm tab-active transition-colors hover:bg-slate-50" : "flex-1 py-3.5 text-sm tab-inactive transition-colors hover:bg-slate-50";
+            document.getElementById('tab-tomorrow').className = (tab === 'tomorrow') ? "flex-1 py-3.5 text-sm tab-active transition-colors hover:bg-slate-50" : "flex-1 py-3.5 text-sm tab-inactive transition-colors hover:bg-slate-50";
             renderParkingLot();
         }
 
@@ -391,19 +526,18 @@
                 const btn = document.createElement('button');
                 let shapeClass = (spot.zone === 'A') ? 'rounded-l-none border-l-0' : 'rounded-r-none border-r-0';
                 let colorClass = '';
-                // 顯示自訂編號 Display ID
-                let contentHTML = `<span class="font-bold tracking-tighter truncate w-full px-0.5">${spot.displayId}</span>`;
+                let contentHTML = `<span class="font-extrabold tracking-tighter truncate w-full px-0.5">${spot.displayId}</span>`;
 
-                if (spot.status === 'guest') colorClass = 'bg-purple-50 border-purple-300 text-purple-600/80 z-10 shadow-sm opacity-90';
+                if (spot.status === 'guest') colorClass = 'bg-purple-50 border-purple-300 text-purple-600 z-10 shadow-sm';
                 else if (spot.status === 'fixed') {
-                    if (spot.ownerId === currentUserEmpId) { colorClass = 'bg-amber-100 border-amber-500 text-amber-800 z-10 shadow-sm ring-1 ring-amber-300'; contentHTML = `<span class="font-bold tracking-tighter flex items-center gap-0.5">🌟${spot.displayId}</span>`; } 
-                    else colorClass = 'bg-gray-100 border-gray-300 text-gray-500 z-10 opacity-70';
+                    if (spot.ownerId === currentUserEmpId) { colorClass = 'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-400 text-amber-800 z-20 shadow-md ring-1 ring-amber-300/50 scale-[1.02]'; contentHTML = `<span class="font-extrabold tracking-tighter flex items-center justify-center gap-0.5">🌟${spot.displayId}</span>`; } 
+                    else colorClass = 'bg-slate-100 border-slate-200 text-slate-400 z-10';
                 } 
-                else if (spot.status === 'available') colorClass = 'bg-white border-green-500 text-green-700 hover:bg-green-50 z-10 shadow-sm';
-                else if (spot.status === 'reserved') { colorClass = 'bg-slate-100 border-slate-300 text-slate-400 cursor-not-allowed opacity-70'; contentHTML = `<span class="font-semibold tracking-tighter line-through">${spot.displayId}</span>`; } 
-                else if (spot.status === 'mine') colorClass = 'bg-indigo-500 border-indigo-600 text-white ring-1 ring-indigo-300 shadow-md z-20 scale-105';
+                else if (spot.status === 'available') colorClass = 'bg-white border-emerald-400 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-500 z-10 shadow-sm';
+                else if (spot.status === 'reserved') { colorClass = 'bg-slate-50 border-slate-200 text-slate-300 cursor-not-allowed'; contentHTML = `<span class="font-bold tracking-tighter line-through">${spot.displayId}</span>`; } 
+                else if (spot.status === 'mine') colorClass = 'bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-700 text-white ring-2 ring-indigo-300/50 shadow-lg z-20 scale-105';
 
-                btn.className = `relative w-full h-[26px] rounded-[4px] border-2 flex items-center justify-center text-[10px] transition-all duration-200 ${shapeClass} ${colorClass} overflow-hidden`;
+                btn.className = `relative w-full h-[28px] rounded-md border-2 flex items-center justify-center text-[11px] transition-all duration-200 ${shapeClass} ${colorClass} overflow-hidden`;
                 btn.innerHTML = contentHTML;
                 btn.onclick = () => handleSpotClick(spot);
                 document.getElementById(`zone-${spot.zone}`).appendChild(btn);
@@ -412,40 +546,43 @@
 
         async function handleSpotClick(spot) {
             const isToday = activeDateTab === 'today';
+            const currentHour = new Date().getHours(); // ⚠️ 抓取真實手機時間防作弊
 
-            // ADMIN 巡視模式 (包含詳細時間戳記檢視)
             if (isAdmin) {
                 let statusText = '', detailsHtml = '';
-                let t_rel = spot.releaseTime ? `<p class="text-green-600 text-xs mt-1">🕒 釋出時間: ${spot.releaseTime}</p>` : '';
-                let t_res = spot.reserveTime ? `<p class="text-indigo-500 text-xs mt-1">🕒 預約時間: ${spot.reserveTime}</p>` : '';
+                let t_rel = spot.releaseTime ? `<p class="text-emerald-600 text-[10px] mt-1.5 font-bold">🕒 釋出: ${spot.releaseTime}</p>` : '';
+                let t_res = spot.reserveTime ? `<p class="text-indigo-500 text-[10px] mt-1.5 font-bold">🕒 預約: ${spot.reserveTime}</p>` : '';
 
                 if (spot.status === 'guest') {
-                    statusText = '<span class="text-purple-600 font-bold">來賓保留位</span>';
-                    detailsHtml = `<div class="mt-2 text-sm text-gray-700 space-y-1"><p>管理單位：<b>${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-gray-800">${spot.ownerPlate}</b></p></div>`;
+                    statusText = '<span class="text-purple-600 font-black">來賓保留位</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>管理單位：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'fixed') {
-                    statusText = '<span class="text-gray-500 font-bold">未釋出 (原車主專屬)</span>';
-                    detailsHtml = `<div class="mt-2 text-sm text-gray-700 space-y-1"><p>持有同仁：<b>${spot.ownerName}</b> (${spot.ownerId})</p><p>登記車號：<b class="text-gray-800">${spot.ownerPlate}</b></p></div>`;
+                    statusText = '<span class="text-slate-500 font-black">未釋出 (原車主專屬)</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>持有同仁：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>登記車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'available') {
-                    statusText = '<span class="text-green-600 font-bold">已釋出 (空位)</span>';
-                    detailsHtml = `<div class="mt-2 text-sm text-gray-700 space-y-1"><p>持有同仁：<b>${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-gray-400">${spot.ownerPlate}</b></p>${t_rel}<p class="text-indigo-600 mt-2 font-bold">✅ 目前無人預約</p></div>`;
+                    statusText = '<span class="text-emerald-600 font-black">已釋出 (空位)</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>持有同仁：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-slate-400 font-mono line-through">${spot.ownerPlate}</b></p>${t_rel}<div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100 mt-3"><p class="text-emerald-700 font-bold text-center">✅ 目前無人預約</p></div></div>`;
                 } else if (spot.status === 'reserved' || spot.status === 'mine') {
-                    statusText = '<span class="text-indigo-600 font-bold">已被預約</span>';
-                    detailsHtml = `<div class="mt-2 text-sm text-gray-700 space-y-1"><p class="text-xs text-gray-500">原持有者：${spot.ownerName} (${spot.ownerId})</p>${t_rel}<div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100 mt-2"><p class="text-xs text-indigo-400 font-bold mb-1">今日停放資訊：</p><p>預約同仁：<b>${spot.reserverName||currentUserName}</b> (${spot.reserverId||currentUserEmpId})</p><p>實際車號：<b class="text-indigo-700 text-base">${spot.reserverPlate || spot.myPlate}</b></p>${t_res}</div></div>`;
+                    statusText = '<span class="text-indigo-600 font-black">已被預約</span>';
+                    let actualPlate = spot.reserverPlate || spot.myPlate;
+                    let actualReserverId = spot.reserverId;
+                    let actualReserverName = spot.reserverName;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原持有者：${spot.ownerName} (${spot.ownerId})</p>${t_rel}<div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 mt-3 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">今日停放資訊</p><p class="mb-1">預約同仁：<b class="text-indigo-900">${spot.reserverName||currentUserName}</b> (${spot.reserverId||currentUserEmpId})</p><p>實際車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
                 }
-                showModal(`車位巡查 [${isToday?'今日':'明日'}] - ${spot.displayId}`, `系統ID: ${spot.sysId}<br>目前狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
+                showModal(`巡查 [${isToday?'今日':'明日'}] - ${spot.displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${spot.sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
                 return; 
             }
 
             // 一般員工邏輯
             if (spot.status === 'guest') {
-                showModal('來賓保留位', `車位 <b>${spot.displayId}</b> 為來賓專屬保留位。<br><span class="text-xs text-gray-500">此車位由總務處管理，不開放預約。</span>`, 'warning', null, '我知道了');
+                showModal('來賓保留位', `車位 <b>${spot.displayId}</b> 為來賓專屬保留位。<br><span class="text-xs text-slate-500">此車位由總務處管理，不開放預約。</span>`, 'warning', null, '我知道了');
             } 
             else if (spot.status === 'fixed') {
                 if (spot.ownerId === currentUserEmpId) {
                     if (isToday) showModal('逾時無法釋出', `車位 <b>${spot.displayId}</b> 釋出期限為「前日 18:00 前」。請切換至「明日」頁籤操作。`, 'error', null, '我知道了');
                     else { 
-                        if (simulatedHour >= 18) showModal('逾時無法釋出', `車位 <b>${spot.displayId}</b> 明日釋出期限為「今日 18:00 前」。目前已逾時鎖定。`, 'error', null, '我知道了');
-                        else showModal('釋出明日專屬車位', `這是您的專屬車位 <b>${spot.displayId}</b>。<br><div class="bg-emerald-50 p-3 rounded-md border border-emerald-200 mt-2"><span class="text-sm text-emerald-800 font-bold">💡 確定要釋出明日的車位嗎？</span></div>`, 'info', 
+                        if (currentHour >= 18) showModal('逾時無法釋出', `車位 <b>${spot.displayId}</b> 明日釋出期限為「今日 18:00 前」。目前已逾時鎖定。`, 'error', null, '我知道了');
+                        else showModal('釋出明日專屬車位', `這是您的專屬車位 <b class="text-indigo-600 text-lg">${spot.displayId}</b>。<br><div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 mt-3"><span class="text-sm text-emerald-800 font-bold">💡 確定要釋出明日的車位嗎？</span></div>`, 'info', 
                             async () => {
                                 const res = await apiRequest("release", { dateTab: activeDateTab, spotId: spot.sysId });
                                 if(res.success) { await fetchCloudData(); showModal('釋出成功', `明日的 <b>${spot.displayId}</b> 已成功釋出。<br>感謝您共享資源！`, 'success', null, '關閉'); } 
@@ -458,8 +595,8 @@
                 if (spot.ownerId === currentUserEmpId) {
                     if (isToday) showModal('無法收回', `車位 <b>${spot.displayId}</b> 今日已鎖定釋出狀態，無法收回自用。`, 'error', null, '我知道了');
                     else { 
-                        if (simulatedHour >= 18) showModal('無法收回', `車位 <b>${spot.displayId}</b> 已於今日 18:00 開放全體預約，無法收回。`, 'error', null, '我知道了');
-                        else showModal('收回車位', `車位 <b>${spot.displayId}</b> 您可以在 18:00 前隨時收回。`, 'warning', 
+                        if (currentHour >= 18) showModal('無法收回', `車位 <b>${spot.displayId}</b> 已於今日 18:00 開放全體預約，無法收回。`, 'error', null, '我知道了');
+                        else showModal('收回車位', `車位 <b>${spot.displayId}</b> 您可以在今日 18:00 前隨時收回。`, 'warning', 
                             async () => {
                                 const res = await apiRequest("cancelRelease", { dateTab: activeDateTab, spotId: spot.sysId });
                                 if(res.success) { await fetchCloudData(); showModal('已收回', `您已成功收回 <b>${spot.displayId}</b> 車位。`, 'success', null, '關閉'); } 
@@ -472,20 +609,20 @@
                     if (hasAssignedSpot) showModal('預約限制', `您本身已有分配專屬車位，無法再預約空位。`, 'error', null, '我知道了');
                     else if (alreadyBooked) showModal('預約限制', `您在【${isToday?'今日':'明日'}】已有一筆預約紀錄。`, 'error', null, '我知道了');
                     else {
-                        if (!isToday && simulatedHour < 18) showModal('尚未開放', `車位 <b>${spot.displayId}</b> 的預約將於「今日 18:00」準時開放。`, 'warning', null, '我知道了');
-                        else showModal('確認預約', `您即將預約【${isToday?'今日':'明日'}】的 <b>${spot.displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
+                        if (!isToday && currentHour < 18) showModal('尚未開放', `車位 <b>${spot.displayId}</b> 的預約將於「今日 18:00」準時開放。`, 'warning', null, '我知道了');
+                        else showModal('確認預約', `您即將預約【${isToday?'今日':'明日'}】的 <b class="text-indigo-600 text-lg">${spot.displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
                             async () => {
                                 const plateInput = document.getElementById('modal-plate-input').value.trim().toUpperCase();
                                 if (!plateInput) { document.getElementById('modal-plate-error').classList.remove('hidden'); return false; }
                                 const res = await apiRequest("reserve", { dateTab: activeDateTab, spotId: spot.sysId, plate: plateInput });
-                                if(res.success) { await fetchCloudData(); showModal('預約成功', `登記完成！<b>${spot.displayId}</b> 已為您保留。<br>車號：<b class="text-indigo-600">${plateInput}</b>`, 'success', null, '完成'); } 
+                                if(res.success) { await fetchCloudData(); showModal('預約成功', `登記完成！<b>${spot.displayId}</b> 已為您保留。<br>車號：<b class="text-indigo-600 font-mono">${plateInput}</b>`, 'success', null, '完成'); } 
                                 else showModal('預約失敗', res.message, 'error');
                             }, '確定預約', '取消', true);
                     }
                 }
             } 
             else if (spot.status === 'mine' || (spot.status === 'reserved' && spot.reserverId === currentUserEmpId)) {
-                showModal('取消預約', `確定要取消【${isToday?'今日':'明日'}】的 <b>${spot.displayId}</b> 預約嗎？`, 'warning', async () => {
+                showModal('取消預約', `確定要取消【${isToday?'今日':'明日'}】的 <b class="text-rose-600">${spot.displayId}</b> 預約嗎？`, 'warning', async () => {
                     const res = await apiRequest("cancelReservation", { dateTab: activeDateTab, spotId: spot.sysId });
                     if(res.success) { await fetchCloudData(); showModal('已取消', '預約已取消，車位已重新釋出。', 'success', null, '關閉'); } 
                     else showModal('錯誤', res.message, 'error');
@@ -509,14 +646,17 @@
                 const booked = db[day].find(s => s.status === 'mine' || (s.status === 'reserved' && s.reserverId === currentUserEmpId));
                 const released = db[day].filter(s => s.ownerId === currentUserEmpId && (s.status === 'available' || s.status === 'reserved'));
                 if (booked || released.length > 0) {
-                    msg += `<div class="bg-gray-50 p-2 rounded mb-2 border border-gray-200"><p class="font-bold text-xs text-gray-700 border-b border-gray-200 pb-1 mb-2">${dayLabel} 車位狀態</p>`;
-                    if(booked) msg += `<p class="text-sm">成功預約: <b class="text-indigo-600">${booked.displayId}</b></p>`;
-                    if(released.length > 0) msg += `<p class="text-sm">已釋出專屬位: <b class="text-green-600">${released.map(s=>s.displayId).join(', ')}</b></p>`;
+                    msg += `<div class="bg-white p-4 rounded-2xl mb-3 border border-slate-100 shadow-sm relative overflow-hidden">`;
+                    if(booked) msg += `<div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>`;
+                    else msg += `<div class="absolute top-0 left-0 w-1 h-full bg-emerald-400"></div>`;
+                    msg += `<p class="font-black text-xs text-slate-400 tracking-wider mb-2">${dayLabel} 狀態</p>`;
+                    if(booked) msg += `<p class="text-sm font-bold text-slate-700">成功預約: <b class="text-indigo-600 text-base">${booked.displayId}</b> <br><span class="text-xs font-normal text-slate-500 font-mono">(${booked.reserverPlate || booked.myPlate})</span></p>`;
+                    if(released.length > 0) msg += `<p class="text-sm font-bold text-slate-700 mt-1">已釋出: <b class="text-emerald-500 text-base">${released.map(s=>s.displayId).join(', ')}</b></p>`;
                     msg += `</div>`;
                 }
             });
-            if (msg === '') msg = `<div class="text-center py-6 text-gray-400"><p class="font-bold">今日與明日皆無紀錄</p></div>`;
-            showModal('我的預約與釋出紀錄', msg, 'info', null, '關閉');
+            if (msg === '') msg = `<div class="text-center py-8 text-slate-400"><p class="font-bold">今日與明日皆無紀錄</p></div>`;
+            showModal('我的預約與釋出', msg, 'info', null, '關閉');
         }
 
         function showDailyReport() {
@@ -544,15 +684,15 @@
                 const isReserved = spot.status === 'reserved' || isMine;
 
                 let statusBadge = '';
-                if(spot.status === 'fixed') statusBadge = '<span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[10px]">未釋出</span>';
-                else if(spot.status === 'available') statusBadge = '<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px]">可預約</span>';
-                else if(isReserved) statusBadge = '<span class="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded text-[10px]">已被預約</span>';
-                else if(spot.status === 'guest') statusBadge = '<span class="bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded text-[10px]">來賓</span>';
+                if(spot.status === 'fixed') statusBadge = '<span class="bg-slate-100 text-slate-500 px-2 py-1 rounded-md text-[10px] font-bold">未釋出</span>';
+                else if(spot.status === 'available') statusBadge = '<span class="bg-emerald-100/50 text-emerald-600 px-2 py-1 rounded-md text-[10px] font-bold border border-emerald-200">可預約</span>';
+                else if(isReserved) statusBadge = '<span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md text-[10px] font-bold border border-indigo-100">已預約</span>';
+                else if(spot.status === 'guest') statusBadge = '<span class="bg-purple-50 text-purple-600 px-2 py-1 rounded-md text-[10px] font-bold border border-purple-100">來賓</span>';
 
                 let actualPlate = (spot.status === 'fixed' || spot.status === 'guest') ? spot.ownerPlate : (isReserved ? (spot.reserverPlate || spot.myPlate) : '-');
-                let reserverDisplay = spot.reserverId ? `${spot.reserverName}<br><span class="text-[9px] text-gray-400">${spot.reserverId}</span>` : '-';
+                let reserverDisplay = spot.reserverId ? `<span class="font-bold text-indigo-700">${spot.reserverName}</span><br><span class="text-[9px] text-slate-400 font-mono">${spot.reserverId}</span>` : '<span class="text-slate-300">-</span>';
 
-                tr.innerHTML = `<td class="py-2 px-2 text-center font-bold text-gray-700 border-b">${spot.displayId}</td><td class="py-2 px-2 border-b">${statusBadge}</td><td class="py-2 px-2 text-gray-600 border-b leading-tight">${spot.ownerName}<br><span class="text-[9px] text-gray-400">${spot.ownerId}</span></td><td class="py-2 px-2 text-indigo-600 font-medium border-b leading-tight">${reserverDisplay}</td><td class="py-2 px-2 text-gray-700 border-b font-mono font-bold">${actualPlate}</td>`;
+                tr.innerHTML = `<td class="py-3 px-2 text-center font-black text-slate-700 border-b border-slate-50 text-sm">${spot.displayId}</td><td class="py-3 px-2 border-b border-slate-50">${statusBadge}</td><td class="py-3 px-2 text-slate-600 border-b border-slate-50 leading-tight font-medium">${spot.ownerName}<br><span class="text-[9px] text-slate-400 font-mono">${spot.ownerId}</span></td><td class="py-3 px-2 border-b border-slate-50 leading-tight">${reserverDisplay}</td><td class="py-3 px-2 text-slate-600 border-b border-slate-50 font-mono font-bold text-xs">${actualPlate}</td>`;
                 tbody.appendChild(tr);
             });
             document.getElementById('report-modal').classList.remove('hidden');
@@ -596,7 +736,7 @@
             tbody.innerHTML = ''; 
             db.today.forEach(spot => {
                 const isGuest = spot.ownerId === 'GUEST';
-                tbody.innerHTML += `<tr><td class="py-2 px-2 text-center font-bold text-rose-700 border-b">${spot.displayId}</td><td class="py-2 px-2 text-gray-600 border-b">${isGuest?'-':spot.ownerId}</td><td class="py-2 px-2 text-gray-600 border-b">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-2 px-2 text-gray-600 border-b">${spot.ownerPlate}</td><td class="py-2 px-2 text-center border-b"><button onclick="openEditModal('${spot.sysId}')" class="bg-rose-100 text-rose-600 px-2 py-1 rounded text-[10px] font-bold">編輯</button></td></tr>`;
+                tbody.innerHTML += `<tr><td class="py-3 px-2 text-center font-black text-rose-700 border-b border-slate-100">${spot.displayId}</td><td class="py-3 px-2 text-slate-500 font-mono text-[10px] border-b border-slate-100">${isGuest?'-':spot.ownerId}</td><td class="py-3 px-2 font-bold text-slate-700 border-b border-slate-100">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-3 px-2 text-slate-500 font-mono text-xs border-b border-slate-100">${spot.ownerPlate}</td><td class="py-3 px-2 text-center border-b border-slate-100"><button onclick="openEditModal('${spot.sysId}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-[10px] font-black border border-rose-200 hover:bg-rose-100 transition-colors">編輯</button></td></tr>`;
             });
             document.getElementById('admin-modal').classList.remove('hidden');
         }
@@ -604,7 +744,7 @@
         function openEditModal(sysId) {
             editingSpotId = sysId;
             const spot = db.today.find(s => s.sysId === sysId);
-            document.getElementById('edit-sys-id').innerText = "系統ID: " + sysId;
+            document.getElementById('edit-sys-id').innerText = "SysID: " + sysId;
             document.getElementById('edit-display-id').value = spot.displayId;
             
             const typeSelect = document.getElementById('edit-spot-type');
@@ -638,42 +778,37 @@
             } else alert("儲存失敗：" + res.message);
         }
 
-        // 查詢歷史紀錄
         async function showHistoryPanel() {
             if (!isAdmin) return;
             const tbody = document.getElementById('history-tbody');
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">載入中...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-slate-400 font-bold">載入中...</td></tr>';
             document.getElementById('history-modal').classList.remove('hidden');
 
-            // 如果是在本機模擬測試
             if (GAS_API_URL.startsWith("YOUR_GAS")) {
-                renderHistoryTable(historyDb.slice().reverse().slice(0, 100)); // 取最新100筆
+                renderHistoryTable(historyDb.slice().reverse().slice(0, 100)); 
                 return;
             }
 
             const res = await fetchWithRetry(`${GAS_API_URL}?action=getHistory&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
-            if (res.success) {
-                renderHistoryTable(res.logs);
-            } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-red-500 py-4">載入失敗: ${res.message}</td></tr>`;
-            }
+            if (res.success) { renderHistoryTable(res.logs); } 
+            else { tbody.innerHTML = `<tr><td colspan="5" class="text-center text-rose-500 py-6 font-bold">載入失敗: ${res.message}</td></tr>`; }
         }
 
         function renderHistoryTable(logs) {
             const tbody = document.getElementById('history-tbody');
             tbody.innerHTML = '';
             if (logs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">尚無任何紀錄</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-slate-400 font-bold">尚無任何紀錄</td></tr>';
                 return;
             }
             logs.forEach(log => {
-                let actionColor = log.action.includes("釋出") ? "text-green-600" : log.action.includes("預約") ? "text-indigo-600" : log.action.includes("取消") ? "text-amber-500" : "text-rose-600";
-                tbody.innerHTML += `<tr class="border-b border-gray-50 hover:bg-gray-50">
-                    <td class="py-2 px-2 text-[9px] text-gray-500">${log.timestamp}</td>
-                    <td class="py-2 px-2 font-bold ${log.dateTab==='today'?'text-blue-600':'text-teal-600'}">${log.dateTab==='today'?'今日':'明日'}</td>
-                    <td class="py-2 px-2 font-bold text-gray-700">${log.displayId}<br><span class="text-[8px] text-gray-400 font-normal">Sys:${log.sysId}</span></td>
-                    <td class="py-2 px-2 font-bold ${actionColor}">${log.action}</td>
-                    <td class="py-2 px-2 text-gray-600">${log.actor}<br><span class="text-[8px] text-gray-400 block truncate w-24">${log.details}</span></td>
+                let actionColor = log.action.includes("釋出") ? "text-emerald-600 bg-emerald-50 border-emerald-100" : log.action.includes("預約") ? "text-indigo-600 bg-indigo-50 border-indigo-100" : log.action.includes("取消") ? "text-amber-600 bg-amber-50 border-amber-100" : "text-rose-600 bg-rose-50 border-rose-100";
+                tbody.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td class="py-2.5 px-2 text-[9px] text-slate-400 font-mono">${log.timestamp}</td>
+                    <td class="py-2.5 px-2 font-black text-xs ${log.dateTab==='today'?'text-blue-500':'text-teal-500'}">${log.dateTab==='today'?'今日':'明日'}</td>
+                    <td class="py-2.5 px-2 font-bold text-slate-700">${log.displayId}<br><span class="text-[8px] text-slate-400 font-mono font-normal">Sys:${log.sysId}</span></td>
+                    <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-black border ${actionColor}">${log.action}</span></td>
+                    <td class="py-2.5 px-2 text-slate-600 font-bold leading-tight">${log.actor}<br><span class="text-[9px] text-slate-400 font-normal block truncate w-24">${log.details}</span></td>
                 </tr>`;
             });
         }
@@ -695,8 +830,9 @@
             if (showPlateInput) { document.getElementById('plate-input-container').classList.remove('hidden'); document.getElementById('modal-plate-input').value = ''; document.getElementById('modal-plate-error').classList.add('hidden'); } 
             else { document.getElementById('plate-input-container').classList.add('hidden'); }
 
-            modalHeader.className = 'p-3 text-white font-bold text-base ' + (type === 'error' ? 'bg-rose-600' : type === 'warning' ? 'bg-amber-500' : type === 'success' ? 'bg-emerald-600' : 'bg-indigo-700');
-            
+            modalHeader.className = 'p-5 text-white font-black text-base tracking-wide ' + (type === 'error' ? 'bg-gradient-to-r from-rose-500 to-rose-600' : type === 'warning' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : type === 'success' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gradient-to-r from-indigo-600 to-indigo-700');
+            confirmBtn.className = 'px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-all ' + (type === 'error' ? 'bg-rose-500 hover:bg-rose-600 shadow-rose-200' : type === 'warning' ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200' : type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200');
+
             if (confirmAction) { cancelBtn.classList.remove('hidden'); currentConfirmAction = confirmAction; } 
             else { cancelBtn.classList.add('hidden'); currentConfirmAction = null; }
             modal.classList.remove('hidden');
@@ -707,7 +843,7 @@
         cancelBtn.onclick = hideModal;
 
         // ==========================================
-        // 🧪 本機純前端測試模擬引擎 
+        // 🧪 本機純前端測試模擬引擎
         // ==========================================
         function initLocalMockData() {
             const zones = ['A', 'B'];
@@ -748,11 +884,13 @@
 
         function simulateLocalApi(action, payload) {
             if (action === "bindUser") {
-                if (payload.empId === "EMP001" && payload.password === "1234") return { success: true, empId: "EMP001", name: "王大明", plate: "DEF-8888" };
-                else if (payload.empId === "EMP999" && payload.password === "1234") return { success: true, empId: "EMP999", name: "測試員", plate: "XYZ-9999" };
-                else if (payload.empId === "ADMIN" && payload.password === "1234") return { success: true, empId: "ADMIN", name: "總務管理員", plate: "ADMIN-CAR" };
+                let requirePwd = payload.password === "1234";
+                if (payload.empId === "EMP001" && payload.password === "1234") return { success: true, empId: "EMP001", name: "王大明", plate: "DEF-8888", requirePasswordChange: requirePwd };
+                else if (payload.empId === "EMP999" && payload.password === "1234") return { success: true, empId: "EMP999", name: "測試員", plate: "XYZ-9999", requirePasswordChange: requirePwd };
+                else if (payload.empId === "ADMIN" && payload.password === "1234") return { success: true, empId: "ADMIN", name: "總務管理員", plate: "ADMIN-CAR", requirePasswordChange: requirePwd };
                 return { success: false, message: "模擬驗證失敗，工號或密碼錯誤。" };
             }
+            if (action === "changePassword") return { success: true };
             const ts = new Date().toLocaleString('zh-TW');
             if (action === "release") {
                 const s = db[payload.dateTab].find(x => x.sysId === payload.spotId);
@@ -779,18 +917,4 @@
                 return { success: true };
             }
             if (action === "adminUpdate") {
-                ['today', 'tomorrow'].forEach(day => {
-                    const s = db[day].find(x => x.sysId === payload.sysId);
-                    s.displayId = payload.displayId;
-                    if (payload.type === 'guest') { s.ownerId = 'GUEST'; s.ownerName = '總務處'; s.ownerPlate = payload.ownerPlate; s.status = 'guest'; } 
-                    else { s.ownerId = payload.ownerId; s.ownerName = payload.ownerName; s.ownerPlate = payload.ownerPlate; s.status = 'fixed'; }
-                    s.reserverId = null; s.reserverName = null; s.reserverPlate = null; s.myPlate = null; s.releaseTime = null; s.reserveTime = null;
-                    historyDb.push({ timestamp: ts, dateTab: day, action: '管理員修改', sysId: s.sysId, displayId: s.displayId, actor: 'ADMIN', details: '總務強制變更資料' });
-                });
-                return { success: true };
-            }
-            return { success: false, message: "不支援的模擬 action" };
-        }
-    </script>
-</body>
-</html>
+                ['today', 'tomorrow'].forEach
