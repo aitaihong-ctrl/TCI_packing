@@ -212,8 +212,19 @@
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
-            <button onclick="showHistoryPanel()" class="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold border border-white/20">歷史紀錄</button>
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('csv-upload').click()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">匯入Users</button>
+                <input type="file" id="csv-upload" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                <button onclick="showHistoryPanel()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">歷史紀錄</button>
+            </div>
         </header>
+        <div class="bg-white p-2 border-b shadow-sm flex justify-between items-center shrink-0 z-10">
+            <span class="text-xs font-extrabold text-slate-600 ml-2">車位管理 (今日)</span>
+            <div class="flex gap-2">
+                <button onclick="exportAdminSpots()" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">匯出車位</button>
+                <button onclick="openEditModal(null, true)" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">➕ 新增</button>
+            </div>
+        </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
@@ -232,16 +243,37 @@
             <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide">系統歷史紀錄</h2><div class="w-16"></div>
         </header>
+        <div class="bg-white p-3 border-b shadow-sm flex flex-col gap-2 shrink-0 z-10">
+            <div class="flex gap-2 items-center">
+                <input type="date" id="history-start" class="text-xs border rounded p-1.5 flex-1 outline-none focus:ring-1 focus:ring-indigo-500">
+                <span class="text-xs text-gray-500 font-bold">至</span>
+                <input type="date" id="history-end" class="text-xs border rounded p-1.5 flex-1 outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <div class="flex justify-between items-center">
+                <select id="history-action" class="text-xs border rounded p-1.5 w-[50%] outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+                    <option value="all">全部動作</option>
+                    <option value="預約">預約車位</option>
+                    <option value="釋出">釋出車位</option>
+                    <option value="取消">取消/收回</option>
+                    <option value="修改">管理員修改</option>
+                    <option value="新增">新增車位</option>
+                    <option value="刪除">刪除車位</option>
+                </select>
+                <div class="flex gap-2">
+                    <button onclick="filterHistory()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-xs font-bold shadow-sm transition-colors">查詢</button>
+                    <button onclick="exportHistoryCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-xs font-bold shadow-sm transition-colors">匯出</button>
+                </div>
+            </div>
+        </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0">
-                        <tr><th class="py-3 px-2">時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
+                    <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 shadow-sm">
+                        <tr><th class="py-3 px-2">發生時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                 </table>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-6">僅顯示最新 100 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
@@ -249,20 +281,28 @@
     <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
-                <span>編輯車位資料</span><span id="edit-sys-id" class="bg-rose-900/50 px-2 py-1 rounded text-xs font-mono"></span>
+                <span id="admin-modal-title">編輯車位資料</span>
+                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="text-white hover:text-rose-200">&times;</button>
             </div>
             <div class="p-6 space-y-4 bg-slate-50/50">
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500"></div>
+                <div id="edit-sys-id-container" class="hidden">
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">系統ID (必填，如: A99)</label>
+                    <input type="text" id="edit-sys-id-input" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase">
+                </div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase"></div>
                 <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位類型</label><select id="edit-spot-type" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-rose-500 font-bold"><option value="employee">員工專屬位</option><option value="guest">來賓保留位</option></select></div>
                 <div id="edit-emp-fields" class="space-y-4 border-t border-slate-200 pt-4 mt-2">
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold shadow-sm"></div>
                 </div>
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
             </div>
-            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
-                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl">取消</button>
-                <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl">儲存變更</button>
+            <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100">
+                <button id="btn-delete-spot" onclick="deleteSpotConfig()" class="px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl hover:bg-rose-100 hidden">刪除</button>
+                <div class="flex justify-end gap-3 w-full">
+                    <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
+                    <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-md shadow-rose-200 transition-colors">儲存</button>
+                </div>
             </div>
         </div>
     </div>
@@ -275,13 +315,13 @@
                 <p id="modal-message" class="text-slate-700 text-sm leading-relaxed font-medium">內容</p>
                 <div id="plate-input-container" class="hidden mt-5 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
                     <label class="block text-xs font-extrabold text-indigo-800 mb-2">請輸入您本次停放的車牌</label>
-                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono" placeholder="如: ABC-1234">
+                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono shadow-sm" placeholder="如: ABC-1234">
                     <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-2 hidden">❌ 請輸入車牌號碼</p>
                 </div>
             </div>
             <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
                 <button id="modal-cancel-btn" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hidden">取消</button>
-                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl">確定</button>
+                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-colors">確定</button>
             </div>
         </div>
     </div>
@@ -290,6 +330,7 @@
         // ==========================================
         // ⚙️ 雲端 API 連結設定
         // ==========================================
+        // 請確保此處為您真實的 Apps Script 網址
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxPRco-YOxtYnxire3nSennMl3yOt7xlXc_KnimD-Vu_K2pEzhZo2jD_OC9TWz7lhtYIw/exec"; 
         const LIFF_ID = "2010157193-q1m2pPB0"; 
 
@@ -299,6 +340,7 @@
         let currentUserName = null;
         let currentUserPlate = null;
         let isAdmin = false; 
+        let isFetchingData = false; 
         
         let activeDateTab = 'today'; 
         const todayStr = new Date().toLocaleDateString('zh-TW', {month: 'numeric', day: 'numeric'});
@@ -307,6 +349,7 @@
         document.getElementById('date-tomorrow-str').innerText = tomorrowStr;
 
         let db = { today: [], tomorrow: [] };
+        let allHistoryLogs = []; 
 
         // 👁️ 密碼明暗碼切換
         function togglePassword(inputId, iconElement) {
@@ -321,13 +364,13 @@
         }
 
         function showSettingsPanel() {
-            document.getElementById('settings-user-info').innerText = `${currentUserName} (${currentUserEmpId})`;
+            document.getElementById('settings-user-info').innerText = `${currentUserName} (工號: ${currentUserEmpId})`;
             document.getElementById('new-password').value = '';
             document.getElementById('settings-modal').classList.remove('hidden');
         }
 
         // ==========================================
-        // 🔄 網路連線核心 (無模擬資料，強制執行真實 API 請求)
+        // 🔄 網路連線核心 (強制執行真實 API 請求)
         // ==========================================
         async function fetchWithRetry(url, options = {}, retries = 2, delay = 500) {
             try {
@@ -359,37 +402,36 @@
         // 📱 啟動與登入機制
         // ==========================================
         window.onload = function() {
-            // 安全防護機制：偵測是否在預覽環境
-            let isPreview = false;
-            try {
-                isPreview = (window !== window.top) || window.location.hostname.includes("usercontent") || window.location.hostname.includes("goog");
-            } catch(e) {
-                isPreview = true; // 存取被阻擋時代表在嚴格的 iframe 沙盒內
-            }
+            const isIframe = window !== window.parent;
+            const isLocalBrowser = !LIFF_ID || LIFF_ID.includes("YOUR_LIFF");
             
-            // 預覽視窗防護，略過 LIFF 初始化跳轉以免無限迴圈閃爍
-            if (isPreview || LIFF_ID.includes("YOUR_LIFF")) {
-                console.log("預覽模式：已略過 LIFF 跳轉，避免畫面閃爍");
+            // 安全防護機制：如果不在真實 LINE App，自動隨機產生 ID 以避免舊的 USER_DEFAULT 自動登入
+            if (isIframe || isLocalBrowser) {
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
-                document.getElementById('header-status-text').innerText = "預覽連線中...";
-                // 使用隨機 LineID 確保每次重新載入都會視為未登入狀態，正常顯示登入畫面
-                currentUserLineId = "PREVIEW_" + Math.random().toString(36).substr(2, 9);
+                document.getElementById('header-status-text').innerText = "網頁預覽模式...";
+                currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
                 fetchCloudData();
                 return;
             }
 
+            // 在真實手機版 LINE App 中，LIFF 超時防護 (超過 2.5 秒若未回應，強制進入登入畫面)
+            let initTimer = setTimeout(() => {
+                fetchCloudData();
+            }, 2500);
+
             liff.init({ liffId: LIFF_ID }).then(() => {
-                if (!liff.isLoggedIn()) {
-                    liff.login(); 
-                } else {
+                clearTimeout(initTimer); 
+                if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
                         document.getElementById('user-display').innerText = "連線中...";
                         fetchCloudData(); 
-                    });
+                    }).catch(() => fetchCloudData()); 
+                } else {
+                    liff.login();
                 }
             }).catch(err => { 
-                console.error("LIFF Error:", err);
+                clearTimeout(initTimer);
                 document.getElementById('user-display').innerText = "LIFF 錯誤"; 
                 fetchCloudData(); 
             });
@@ -409,8 +451,10 @@
         }
 
         async function fetchCloudData() {
+            if (isFetchingData) return;
+            isFetchingData = true;
+
             try {
-                // 發送真實請求到您的 GAS
                 const res = await fetchWithRetry(`${GAS_API_URL}?action=getData&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
                 
                 if (res.success) {
@@ -421,6 +465,7 @@
                         isAdmin = (currentUserEmpId === 'ADMIN');
 
                         if (res.user.requirePasswordChange) {
+                            // 已經登入過，但密碼為預設值，強制跳出密碼修改視窗
                             document.getElementById('login-modal').classList.add('hidden');
                             document.getElementById('force-password-modal').classList.remove('hidden');
                             document.getElementById('scroll-area').classList.add('blur-bg');
@@ -428,7 +473,8 @@
                             unlockUI();
                         }
                     } else {
-                        // 尚未綁定，顯示登入視窗
+                        // 未綁定過，顯示登入視窗
+                        document.getElementById('header-status-text').innerText = "請先登入";
                         document.getElementById('login-modal').classList.remove('hidden');
                         document.getElementById('scroll-area').classList.add('blur-bg');
                     }
@@ -436,14 +482,16 @@
                     throw new Error(res.message);
                 }
             } catch (err) {
-                // 網路錯誤攔截：單純顯示錯誤訊息在登入視窗下方，不產生多餘按鈕與跳轉邏輯
+                // 發生異常，確保登入畫面絕對不會被隱藏
                 document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
                 document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查 GAS 部署設定或網路狀態。</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查 GAS 部署設定。</div>`;
                 errorMsg.classList.remove('hidden');
+            } finally {
+                isFetchingData = false;
             }
         }
 
@@ -476,7 +524,6 @@
                 } else {
                     unlockUI();
                 }
-
                 await fetchCloudData(); 
             } else {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
@@ -521,7 +568,7 @@
             const res = await apiRequest("changePassword", { newPassword: newPwd });
             if (res.success) {
                 document.getElementById('settings-modal').classList.add('hidden');
-                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次重新綁定裝置時請使用新密碼。</span>', 'success', null, '關閉');
+                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次登入時請使用新密碼。</span>', 'success', null, '關閉');
             } else {
                 showModal('錯誤', res.message, 'error');
             }
@@ -552,11 +599,11 @@
                 else if (spot.status === 'reserved' || spot.status === 'mine') displayPlate = spot.reserverPlate || spot.myPlate;
                 else if (spot.status === 'available') displayPlate = '空位';
 
-                // 在車格按鈕內同時顯示車位編號與車號
+                // 在車格按鈕內同時顯示車位編號與車號 (增加高度)
                 let contentHTML = `
-                    <div class="flex flex-col items-center justify-center leading-tight">
+                    <div class="flex flex-col items-center justify-center leading-none w-full">
                         <span class="font-extrabold tracking-tighter text-[11px]">${spot.displayId || spot.id}</span>
-                        <span class="text-[8px] font-mono opacity-90 truncate w-full px-1">${displayPlate}</span>
+                        <span class="text-[9px] font-bold opacity-90 truncate w-full px-1 mt-[2px]">${displayPlate}</span>
                     </div>
                 `;
 
@@ -575,7 +622,7 @@
 
                 if(isAdmin) { colorClass += " cursor-pointer hover:opacity-80"; }
 
-                btn.className = `relative w-full py-1.5 rounded-md border-2 flex items-center justify-center text-center transition-all ${shapeClass} ${colorClass} overflow-hidden`;
+                btn.className = `relative w-full h-[38px] rounded-md border-2 flex items-center justify-center text-center transition-all ${shapeClass} ${colorClass} overflow-hidden`;
                 btn.innerHTML = contentHTML;
                 btn.onclick = () => handleSpotClick(spot);
                 document.getElementById(`zone-${spot.zone}`).appendChild(btn);
@@ -596,27 +643,27 @@
 
                 if (spot.status === 'guest') {
                     statusText = '<span class="text-purple-600 font-black">來賓保留位</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b></p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>管理單位：<b class="text-slate-800">${spot.ownerName}</b> (工號: ${spot.ownerId})</p><p>預設車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'fixed') {
-                    statusText = '<span class="text-slate-500 font-black">未釋出 (專屬保留)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    statusText = '<span class="text-slate-500 font-black">未釋出 (原車主專屬)</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>持有同仁：<b class="text-slate-800">${spot.ownerName}</b> (工號: ${spot.ownerId})</p><p>登記車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'available') {
                     statusText = '<span class="text-emerald-600 font-black">已釋出 (空位)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b></p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b> (工號: ${spot.ownerId})</p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
                 } else if (spot.status === 'reserved' || spot.status === 'mine') {
                     statusText = '<span class="text-indigo-600 font-black">已被預約</span>';
                     let actualPlate = spot.reserverPlate || spot.myPlate;
                     let actualReserverId = spot.reserverId;
                     let actualReserverName = spot.reserverName;
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原車主：${spot.ownerName}</p><div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (${actualReserverId})</p><p>車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原持有者：${spot.ownerName} (工號: ${spot.ownerId})</p>${t_rel}<div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (工號: ${actualReserverId})</p><p>實際車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
                 }
-                showModal(`車位巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
+                showModal(`巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
                 return; 
             }
 
             // 一般員工邏輯
             if (spot.status === 'guest') {
-                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
+                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>管理單位：<b>${spot.ownerName}</b> (工號: ${spot.ownerId})<br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
             } 
             else if (spot.status === 'fixed') {
                 if (spot.ownerId === currentUserEmpId) {
@@ -631,7 +678,7 @@
                             }, '確定釋出', '保留自用');
                     }
                 } else {
-                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁今日正常上班，尚未釋出此車位。</span>`, 'error', null, '我知道了');
+                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>持有同仁：<b>${spot.ownerName}</b> (工號: ${spot.ownerId})<br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁今日正常上班，尚未釋出此車位。</span>`, 'error', null, '我知道了');
                 }
             } 
             else if (spot.status === 'available') {
@@ -653,7 +700,7 @@
                     else if (alreadyBooked) showModal('預約限制', `您在【${isToday?'今日':'明日'}】已有一筆預約紀錄。`, 'error', null, '我知道了');
                     else {
                         if (!isToday && currentHour < 18) showModal('尚未開放', `車位 <b>${displayId}</b> 的預約將於「今日 18:00」準時開放。`, 'warning', null, '我知道了');
-                        else showModal('確認預約', `您即初預約【${isToday?'今日':'明日'}】的 <b class="text-indigo-600 text-lg">${displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
+                        else showModal('確認預約', `您即將預約【${isToday?'今日':'明日'}】的 <b class="text-indigo-600 text-lg">${displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
                             async () => {
                                 const plateInput = document.getElementById('modal-plate-input').value.trim().toUpperCase();
                                 if (!plateInput) { document.getElementById('modal-plate-error').classList.remove('hidden'); return false; }
@@ -672,7 +719,7 @@
                 }, '確定取消', '保留車位');
             } 
             else if (spot.status === 'reserved') {
-                showModal('已被預約', `車位 <b>${displayId}</b> 已被其他同仁預約囉！`, 'error', null, '關閉');
+                showModal('已被預約', `車位 <b>${displayId}</b> 已被其他同仁預約囉！<br><br>預約同仁：<b>${spot.reserverName}</b> (工號: ${spot.reserverId})<br>停放車號：<b class="text-rose-600 font-mono">${spot.reserverPlate}</b><br><br><span class="text-xs text-gray-500">請尋找其他綠色空位。</span>`, 'error', null, '關閉');
             }
         }
 
