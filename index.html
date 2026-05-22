@@ -21,17 +21,16 @@
         button:active { transform: scale(0.96); }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen w-full flex justify-center selection:bg-indigo-100">
+<body class="bg-slate-200 text-slate-800 font-sans antialiased h-[100dvh] w-full flex justify-center overflow-hidden selection:bg-indigo-100">
 
-    <!-- 首頁主程式框架 -->
-    <div class="w-full max-w-md bg-white shadow-2xl min-h-screen flex flex-col relative">
+    <div class="w-full max-w-md bg-white shadow-2xl h-full relative flex flex-col">
         <!-- 頂部導航列 -->
-        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center shrink-0">
+        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center shrink-0 relative">
             <div>
                 <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200 drop-shadow-sm">TCI停車位管理系統</h1>
                 <p class="text-[10px] text-indigo-200 mt-1 flex items-center gap-1.5 font-medium">
                     <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span></span>
-                    <span id="header-status-text">系統載入中...</span>
+                    <span id="header-status-text">系統連線中...</span>
                 </p>
             </div>
             <div class="flex flex-col items-end gap-1.5">
@@ -40,7 +39,7 @@
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
                 <!-- 個人設定按鈕 -->
-                <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30">
+                <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white p-1 z-30 relative" style="display: none;">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
             </div>
@@ -53,48 +52,71 @@
         </div>
 
         <!-- 狀態圖例區 -->
-        <div class="bg-slate-50/80 p-2.5 border-b border-gray-200 z-20 flex flex-wrap justify-center gap-x-3.5 gap-y-1.5 text-[10px] font-bold shrink-0">
+        <div class="bg-slate-50/90 backdrop-blur p-2.5 border-b border-gray-200 z-20 flex flex-wrap justify-center gap-x-3.5 gap-y-1.5 text-[10px] font-bold shrink-0">
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300 shadow-sm block"></span><span class="text-gray-500">未釋出</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">已被預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 (精緻環狀車道設計) -->
-        <main class="flex-1 min-h-0 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700 w-full" id="scroll-area">
+        <!-- 停車場主視圖 (精準數學排版) -->
+        <main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar bg-[#f1f5f9] w-full relative blur-bg transition-all duration-700" id="scroll-area">
             
-            <!-- 完美環形車道背景 (利用純 CSS 邊框繪製連續彎道，不干擾排版) -->
-            <div class="absolute top-6 bottom-6 left-2 right-2 border-[36px] border-slate-700 rounded-[60px] pointer-events-none shadow-[inset_0_0_15px_rgba(0,0,0,0.6)] z-0"></div>
-            <!-- 道路中心虛線 -->
-            <div class="absolute top-6 bottom-6 left-2 right-2 border-[2px] border-dashed border-white/30 rounded-[60px] m-[17px] pointer-events-none z-0"></div>
+            <!-- 內容包裹區 (自動隨資料向下延展) -->
+            <div class="relative w-full min-h-full py-8 px-2 flex">
+                
+                <!-- 💡 完美環形車道背景：使用純 CSS border 繪製，絕對不會變形 -->
+                <div class="absolute inset-y-4 inset-x-2 border-[32px] border-slate-700 rounded-[50px] pointer-events-none shadow-[inset_0_0_15px_rgba(0,0,0,0.6)] z-0"></div>
+                <!-- 道路中心虛線 -->
+                <div class="absolute inset-y-4 inset-x-2 border-[2px] border-dashed border-white/30 rounded-[50px] m-[15px] pointer-events-none z-0"></div>
 
-            <div class="relative z-10 w-full flex justify-between px-2 py-10 h-max min-h-full">
-                <!-- 左側車道文字 (與 36px 邊框完美對齊) -->
-                <div class="w-[36px] flex justify-center flex-shrink-0 z-10">
-                    <div class="sticky top-[40vh] h-max py-4 px-1.5 rounded-full bg-slate-800/90 backdrop-blur-sm flex flex-col items-center justify-center border border-slate-600/50 shadow-lg">
-                        <span class="writing-vertical text-emerald-400 font-black text-[11px] tracking-[0.2em] uppercase drop-shadow-md">Entrance</span>
-                        <span class="text-emerald-400 font-black text-xs mt-2">&darr;</span>
+                <!-- 左側車道 (寬度精確設定為 32px，完美疊合柏油路) -->
+                <div class="w-[32px] relative flex justify-center shrink-0 z-10">
+                    <!-- 🚗 視差休旅車 (SUV) -->
+                    <div id="interactive-suv" class="absolute z-20 transition-transform duration-200 ease-out w-[24px]" style="top: 0px; transform: translateY(0px);">
+                        <svg viewBox="0 0 100 210" class="w-full h-auto drop-shadow-[0_6px_8px_rgba(0,0,0,0.6)]">
+                            <rect x="6" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                            <rect x="80" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                            <rect x="6" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                            <rect x="80" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                            <rect x="15" y="10" width="70" height="190" rx="20" fill="#e2e8f0" />
+                            <rect x="15" y="10" width="70" height="186" rx="20" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+                            <path d="M 22 60 L 78 60 L 84 90 L 16 90 Z" fill="#1e293b" opacity="0.95" />
+                            <path d="M 26 160 L 74 160 L 78 140 L 22 140 Z" fill="#1e293b" opacity="0.95" />
+                            <rect x="32" y="100" width="36" height="35" rx="6" fill="#0f172a" opacity="0.8" />
+                            <path d="M 20 12 L 32 12 L 34 20 L 18 20 Z" fill="#fef08a" />
+                            <path d="M 80 12 L 68 12 L 66 20 L 82 20 Z" fill="#fef08a" />
+                            <rect x="18" y="190" width="18" height="6" rx="2" fill="#ef4444" />
+                            <rect x="64" y="190" width="18" height="6" rx="2" fill="#ef4444" />
+                            <rect x="5" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+                            <rect x="85" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+                        </svg>
+                    </div>
+
+                    <!-- Entrance 標示牌 (修改為 top-[25vh]) -->
+                    <div class="sticky top-[25vh] h-max py-4 px-1 rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 mt-10">
+                        <span class="writing-vertical text-emerald-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Entrance</span>
+                        <span class="text-emerald-400 font-black text-sm mt-1">&darr;</span>
                     </div>
                 </div>
 
-                <!-- 停車區 (A & B) -->
-                <div class="flex-1 flex justify-between px-1 sm:px-2 z-10">
-                    <!-- A區 -->
-                    <div id="zone-A" class="flex flex-col gap-2 w-[46%] my-6"></div>
-                    <!-- 中央分隔線 -->
-                    <div class="w-[2px] bg-slate-300/80 rounded-full my-12 shadow-inner"></div>
-                    <!-- B區 -->
-                    <div id="zone-B" class="flex flex-col gap-2 w-[46%] my-6"></div>
+                <!-- 中央停車區塊 -->
+                <div class="flex-1 mx-2 flex justify-between bg-white/70 backdrop-blur-sm rounded-2xl p-2 shadow-sm border border-white z-10 h-max min-h-[400px] pointer-events-auto">
+                    <div id="zone-A" class="flex flex-col gap-2 w-[48%] my-2"></div>
+                    <div class="w-[2px] bg-slate-300/80 rounded-full mx-1 my-6 shadow-inner shrink-0"></div>
+                    <div id="zone-B" class="flex flex-col gap-2 w-[48%] my-2"></div>
                 </div>
 
-                <!-- 右側車道文字 (與 36px 邊框完美對齊) -->
-                <div class="w-[36px] flex justify-center flex-shrink-0 z-10">
-                    <div class="sticky top-[40vh] h-max py-4 px-1.5 rounded-full bg-slate-800/90 backdrop-blur-sm flex flex-col items-center justify-center border border-slate-600/50 shadow-lg">
-                        <span class="text-rose-400 font-black text-xs mb-2">&uarr;</span>
-                        <span class="writing-vertical text-rose-400 font-black text-[11px] tracking-[0.2em] uppercase drop-shadow-md">Exit</span>
+                <!-- 右側車道 (寬度精確設定為 32px) -->
+                <div class="w-[32px] relative flex justify-center shrink-0 z-10">
+                    <!-- Exit 標示牌 (修改為 top-[25vh]) -->
+                    <div class="sticky top-[25vh] h-max py-4 px-1 rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 mt-10">
+                        <span class="text-rose-400 font-black text-sm mb-1">&uarr;</span>
+                        <span class="writing-vertical text-rose-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Exit</span>
                     </div>
                 </div>
+
             </div>
         </main>
 
@@ -112,7 +134,7 @@
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 <span class="text-[10px] font-extrabold tracking-wide">明細報表</span>
             </button>
-            <button id="nav-admin-btn" class="flex-1 flex flex-col items-center text-rose-400 hover:text-rose-600 transition-colors hidden" onclick="showAdminPanel()">
+            <button id="nav-admin-btn" class="flex-1 flex flex-col items-center text-rose-400 hover:text-rose-600 transition-colors" style="display: none;" onclick="showAdminPanel()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                 <span class="text-[10px] font-extrabold tracking-wide">總務管理</span>
             </button>
@@ -124,7 +146,6 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -144,7 +165,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="login-error-msg" class="hidden mt-2"></div>
+                <div id="login-error-msg" style="display:none;"></div>
                 <button onclick="handleLogin()" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm tracking-wide">驗證並登入</button>
             </div>
         </div>
@@ -154,8 +175,6 @@
     <div id="force-password-modal" class="fixed inset-0 bg-slate-900/60 z-[110] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative border border-white/20">
             <div class="bg-gradient-to-br from-rose-600 to-rose-800 p-8 text-center relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30">
                     <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
@@ -172,7 +191,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="force-error-msg" class="hidden mt-4"></div>
+                <div id="force-error-msg" style="display:none;"></div>
                 <button onclick="submitForcedPassword()" id="btn-force-submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm">確認變更並進入</button>
             </div>
         </div>
@@ -206,7 +225,6 @@
     </div>
 
     <!-- 報表明細視窗 -->
-    <!-- 修復點：最外層維持 display none / flex 切換，內層 flex-1 配合 relative/absolute 強制產生捲動條 -->
     <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] flex-col slide-in-bottom h-[100dvh]" style="display: none;">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('report-modal').style.display='none'" class="font-bold text-sm text-slate-300">返回</button>
@@ -225,7 +243,6 @@
             </select>
         </div>
         
-        <!-- 表格捲動區域：完全依賴內聯的 relative 和 absolute，不再被行動版 flex 高度限制卡死 -->
         <div class="flex-1 relative p-3 flex flex-col gap-2 min-h-0">
             <div class="flex-1 relative bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="absolute inset-0 overflow-auto no-scrollbar">
@@ -386,6 +403,33 @@
 
     <script>
         // ==========================================
+        // 🚗 休旅車 (SUV) 視差滾動互動引擎
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollArea = document.getElementById('scroll-area');
+            const suvCar = document.getElementById('interactive-suv');
+            
+            if (scrollArea && suvCar) {
+                scrollArea.addEventListener('scroll', () => {
+                    // 計算最大可滾動距離
+                    const maxScrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
+                    if (maxScrollTop <= 0) return; // 內容不夠長無法滾動時不動作
+                    
+                    // 計算滾動百分比 (0 到 1)
+                    const scrollPercent = scrollArea.scrollTop / maxScrollTop;
+                    
+                    // 根據內容總長度，計算車子可以移動的最大視覺距離
+                    const contentHeight = scrollArea.scrollHeight;
+                    const maxTravel = contentHeight - 140; // 扣除車身長度安全邊距
+                    
+                    // 應用變換，讓車子在容器內部往下「開」
+                    const translateY = scrollPercent * maxTravel;
+                    suvCar.style.transform = `translateY(${translateY}px)`;
+                });
+            }
+        });
+
+        // ==========================================
         // ⚙️ 雲端 API 連結設定
         // ==========================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxPRco-YOxtYnxire3nSennMl3yOt7xlXc_KnimD-Vu_K2pEzhZo2jD_OC9TWz7lhtYIw/exec"; 
@@ -480,18 +524,34 @@
                 return;
             }
 
+            // 防卡死計時器：5秒內 LIFF 沒反應就跳轉網頁版
+            let initTimer = setTimeout(() => {
+                if (!currentUserLineId) {
+                    document.getElementById('header-status-text').innerText = "LINE連線逾時，切換為網頁版";
+                    currentUserLineId = getLocalSimId();
+                    fetchCloudData();
+                }
+            }, 5000);
+
             liff.init({ liffId: LIFF_ID }).then(() => {
+                clearTimeout(initTimer);
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
-                        document.getElementById('user-display').innerText = "連線中...";
+                        document.getElementById('header-status-text').innerText = "資料同步中...";
                         fetchCloudData(); 
-                    }).catch(() => fetchCloudData()); 
+                    }).catch(() => {
+                        currentUserLineId = getLocalSimId();
+                        fetchCloudData(); 
+                    }); 
                 } else {
-                    liff.login();
+                    document.getElementById('header-status-text').innerText = "跳轉 LINE 登入中...";
+                    liff.login({ redirectUri: window.location.href });
                 }
             }).catch(err => { 
-                document.getElementById('user-display').innerText = "LIFF 錯誤"; 
+                clearTimeout(initTimer);
+                document.getElementById('header-status-text').innerText = "LIFF 錯誤"; 
+                currentUserLineId = getLocalSimId();
                 fetchCloudData(); 
             });
         };
@@ -506,11 +566,11 @@
             document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
             
             if (isViewer) {
-                document.getElementById('btn-settings').classList.add('hidden');
-                document.getElementById('nav-admin-btn').classList.add('hidden');
+                document.getElementById('btn-settings').style.display = 'none';
+                document.getElementById('nav-admin-btn').style.display = 'none';
             } else {
-                document.getElementById('btn-settings').classList.remove('hidden');
-                if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
+                document.getElementById('btn-settings').style.display = 'block';
+                if (isAdmin) document.getElementById('nav-admin-btn').style.display = 'flex';
             }
 
             renderParkingLot();
@@ -534,6 +594,7 @@
                         if (res.user.requirePasswordChange && !isAdmin && !isViewer) {
                             document.getElementById('login-modal').style.display = 'none';
                             document.getElementById('force-password-modal').style.display = 'flex';
+                            document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI();
                         }
@@ -552,10 +613,11 @@
             } catch (err) {
                 document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').style.display = 'flex';
+                document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態。</div>`;
-                errorMsg.classList.remove('hidden');
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態或重試。</div>`;
+                errorMsg.style.display = 'block';
             } finally {
                 isFetchingData = false;
             }
@@ -565,20 +627,25 @@
             const empId = document.getElementById('login-emp-id').value.toUpperCase().trim();
             const password = document.getElementById('login-password').value;
             const errorMsg = document.getElementById('login-error-msg');
+            const btn = document.getElementById('btn-login-submit');
 
             if (!empId || !password) { 
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 請填寫完整工號與密碼</div>`;
-                errorMsg.classList.remove('hidden'); 
+                errorMsg.style.display = 'block'; 
                 return; 
             }
 
-            const btn = document.getElementById('btn-login-submit');
-            const originalText = btn.innerText;
+            if (btn.disabled) return;
+
+            btn.disabled = true;
             btn.innerText = "驗證中...";
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
             
             const res = await apiRequest("bindUser", { empId: empId, password: password });
             
-            btn.innerText = originalText;
+            btn.disabled = false;
+            btn.innerText = "驗證並登入";
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
 
             if (res.success) {
                 currentUserEmpId = res.empId; currentUserName = res.name; currentUserPlate = res.plate;
@@ -595,7 +662,7 @@
                 await fetchCloudData(); 
             } else {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
-                errorMsg.classList.remove('hidden');
+                errorMsg.style.display = 'block';
             }
         }
 
@@ -604,28 +671,36 @@
             const errorMsg = document.getElementById('force-error-msg');
             const oldPwdInput = document.getElementById('login-password');
             const currentOldPwd = oldPwdInput ? oldPwdInput.value : "";
+            const btn = document.getElementById('btn-force-submit');
 
             if (!newPwd || newPwd.length < 4) {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 密碼不能為空，且至少需4碼！</div>`;
-                errorMsg.classList.remove('hidden'); return;
+                errorMsg.style.display = 'block'; return;
             }
             if (newPwd === currentOldPwd || newPwd === "1234" || newPwd === "Aa123456" || newPwd === "ADMIN1234") {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 新密碼不可與預設密碼相同！</div>`;
-                errorMsg.classList.remove('hidden'); return;
+                errorMsg.style.display = 'block'; return;
             }
 
-            const btn = document.getElementById('btn-force-submit');
+            if (btn.disabled) return;
+
+            btn.disabled = true;
             btn.innerText = "變更中...";
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
             const res = await apiRequest("changePassword", { newPassword: newPwd });
+            
+            btn.disabled = false;
             btn.innerText = "確認變更並進入系統";
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
 
             if (res.success) {
-                errorMsg.classList.add('hidden');
+                errorMsg.style.display = 'none';
                 unlockUI(); 
                 showModal('安全性設定完成', '密碼變更成功，歡迎進入系統！', 'success', null, '關閉');
             } else {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
-                errorMsg.classList.remove('hidden');
+                errorMsg.style.display = 'block';
             }
         }
 
