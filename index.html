@@ -23,6 +23,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex justify-center selection:bg-indigo-100">
 
+    <!-- 主程式框架 -->
     <div class="w-full max-w-md bg-white shadow-2xl min-h-screen relative overflow-hidden flex flex-col">
         <!-- 頂部導航列 -->
         <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center relative shrink-0">
@@ -38,6 +39,7 @@
                     <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_rgba(251,113,133,0.8)]" id="status-dot"></span>
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
+                <!-- 個人設定按鈕 -->
                 <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30 relative">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
@@ -59,7 +61,7 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 (預設開啟模糊背景) -->
+        <!-- 停車場主視圖 -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -93,10 +95,11 @@
     </div>
 
     <!-- 首次登入視窗 -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm hidden fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -188,7 +191,11 @@
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
-                <option value="all">全部</option><option value="available">可預約</option><option value="reserved">已被預約</option><option value="fixed">未釋出</option><option value="guest">來賓</option>
+                <option value="all">全部車位</option>
+                <option value="employee_fixed">員工專屬位</option>
+                <option value="guest_only">來賓保留位</option>
+                <option value="available_now">目前空位(可預約)</option>
+                <option value="reserved_now">已被預約</option>
             </select>
         </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
@@ -349,6 +356,16 @@
         let db = { today: [], tomorrow: [] };
         let allHistoryLogs = []; 
 
+        // 取得本機模擬識別碼 (為了讓電腦版測試時，記住當下的登入狀態)
+        function getLocalSimId() {
+            let id = localStorage.getItem("simLineId");
+            if (!id || !id.startsWith("SIM_")) {
+                id = "SIM_" + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem("simLineId", id);
+            }
+            return id;
+        }
+
         // 👁️ 密碼明暗碼切換
         function togglePassword(inputId, iconElement) {
             const input = document.getElementById(inputId);
@@ -397,13 +414,14 @@
         }
 
         // ==========================================
-        // 📱 啟動與登入機制
+        // 📱 啟動與登入機制 (修復 LIFF 強制登入)
         // ==========================================
         window.onload = function() {
             // 預覽視窗防護，避免 Canvas preview 產生無限跳轉
-            const isCanvasPreview = window.location.hostname.includes("goog") || window.location.hostname.includes("usercontent");
+            const isCanvasPreview = (window !== window.top) || window.location.hostname.includes("goog") || window.location.hostname.includes("usercontent");
 
             if (isCanvasPreview || LIFF_ID.includes("YOUR_LIFF")) {
+                console.log("預覽模式：已略過 LIFF 跳轉");
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
                 document.getElementById('header-status-text').innerText = "預覽環境連線中...";
                 currentUserLineId = "PREV_" + Math.random().toString(36).substr(2, 9);
@@ -413,31 +431,36 @@
 
             document.getElementById('header-status-text').innerText = "LINE 授權載入中...";
             
+            // 延長逾時時間，若 LIFF 卡死，至少給予本機 ID
+            let initTimer = setTimeout(() => {
+                if (!currentUserLineId) {
+                    document.getElementById('header-status-text').innerText = "LINE連線逾時，切換為網頁版";
+                    currentUserLineId = getLocalSimId();
+                    fetchCloudData();
+                }
+            }, 5000); 
+
             liff.init({ liffId: LIFF_ID }).then(() => {
+                clearTimeout(initTimer);
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
                         document.getElementById('header-status-text').innerText = "資料同步中...";
                         fetchCloudData(); 
                     }).catch(err => {
-                        // 獲取 Profile 失敗，配發一般網頁版 ID，走手動帳密登入
-                        currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
+                        currentUserLineId = getLocalSimId();
                         fetchCloudData(); 
                     }); 
                 } else {
-                    // 如果在 LINE APP 中但沒登入 (極少見狀況) -> 要求登入
-                    if (liff.isInClient()) {
-                        liff.login();
-                    } else {
-                        // 在外部電腦瀏覽器 (如 PC 的 Github Pages) 中開啟，不強制跳轉 LINE 登入，改走手動輸入帳密！
-                        document.getElementById('header-status-text').innerText = "網頁版連線中...";
-                        currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
-                        fetchCloudData();
-                    }
+                    // 【關鍵修正】如果使用者還沒登入 LINE，一律強制呼叫 liff.login() 跳轉登入！
+                    // 這樣就算從官方帳號選單點的是 Github 直接網址，也會被強制帶入 LINE 授權流程，保證能抓到 LINE ID。
+                    document.getElementById('header-status-text').innerText = "跳轉 LINE 登入中...";
+                    liff.login({ redirectUri: window.location.href });
                 }
             }).catch(err => { 
-                // LIFF 初始化失敗 (例如被阻擋)，直接降級為網頁手動登入模式
-                currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
+                clearTimeout(initTimer);
+                document.getElementById('user-display').innerText = "LIFF 錯誤"; 
+                currentUserLineId = getLocalSimId();
                 fetchCloudData(); 
             });
         };
@@ -485,9 +508,14 @@
                             unlockUI();
                         }
                     } else {
-                        document.getElementById('header-status-text').innerText = "請先登入";
-                        document.getElementById('login-modal').classList.remove('hidden');
-                        document.getElementById('scroll-area').classList.add('blur-bg');
+                        // 如果系統「已經在登入狀態 (記憶體有值)」，即使後端因為沒綁定而回傳 null，前端也不該將他踢出。
+                        if (!currentUserEmpId) {
+                            document.getElementById('header-status-text').innerText = "請先登入";
+                            document.getElementById('login-modal').classList.remove('hidden');
+                            document.getElementById('scroll-area').classList.add('blur-bg');
+                        } else {
+                            unlockUI(); 
+                        }
                     }
                 } else {
                     throw new Error(res.message);
@@ -535,6 +563,8 @@
                 } else {
                     unlockUI();
                 }
+                
+                // 登入成功後只需更新地圖資料即可，不需要把整個 User 再驗證一次 (防止 ADMIN 被洗掉)
                 await fetchCloudData(); 
             } else {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
