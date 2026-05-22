@@ -23,7 +23,6 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex justify-center selection:bg-indigo-100">
 
-    <!-- 主程式框架 -->
     <div class="w-full max-w-md bg-white shadow-2xl min-h-screen relative overflow-hidden flex flex-col">
         <!-- 頂部導航列 -->
         <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center relative shrink-0">
@@ -39,7 +38,6 @@
                     <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_rgba(251,113,133,0.8)]" id="status-dot"></span>
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
-                <!-- 個人設定按鈕 -->
                 <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30 relative">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
@@ -56,12 +54,12 @@
         <div class="bg-slate-50/80 p-2.5 border-b border-gray-200 z-20 flex flex-wrap justify-center gap-x-3.5 gap-y-1.5 text-[10px] font-bold shrink-0">
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300 shadow-sm block"></span><span class="text-gray-500">未釋出</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">我的預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">專屬位</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">已被預約</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
         </div>
 
-        <!-- 停車場主視圖 (預設開啟模糊背景) -->
+        <!-- 停車場主視圖 (預設模糊) -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -81,7 +79,7 @@
             </button>
             <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showMyReservation()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                <span class="text-[10px] font-extrabold tracking-wide">我的預約</span>
+                <span class="text-[10px] font-extrabold tracking-wide">我的紀錄</span>
             </button>
             <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showDailyReport()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -99,7 +97,6 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -108,7 +105,7 @@
             <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">員工工號 (Emp ID)</label>
-                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="請輸入工號">
+                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="請輸入工號 (或 VIEWER)">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">密碼</label>
@@ -120,7 +117,7 @@
                     </div>
                 </div>
                 <div id="login-error-msg" class="hidden mt-2"></div>
-                <button onclick="handleLogin()" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm tracking-wide">驗證並登入</button>
+                <button onclick="handleLogin()" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm tracking-wide">登入系統</button>
             </div>
         </div>
     </div>
@@ -191,7 +188,11 @@
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
-                <option value="all">全部</option><option value="available">可預約</option><option value="reserved">已被預約</option><option value="fixed">未釋出</option><option value="guest">來賓</option>
+                <option value="all">全部車位</option>
+                <option value="employee_fixed">員工專屬位</option>
+                <option value="guest_only">來賓保留位</option>
+                <option value="available_now">目前空位(可預約)</option>
+                <option value="reserved_now">已被預約</option>
             </select>
         </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
@@ -274,6 +275,7 @@
                     <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                 </table>
             </div>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-6">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
@@ -330,16 +332,16 @@
         // ==========================================
         // ⚙️ 雲端 API 連結設定
         // ==========================================
-        // 請確保此處為您真實的 Apps Script 網址
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxPRco-YOxtYnxire3nSennMl3yOt7xlXc_KnimD-Vu_K2pEzhZo2jD_OC9TWz7lhtYIw/exec"; 
         const LIFF_ID = "2010157193-q1m2pPB0"; 
 
         // 系統變數
-        let currentUserLineId = ""; 
+        let currentUserLineId = ""; // 預設為空，確保在非 LINE 環境時不會覆蓋掉已綁定的帳號
         let currentUserEmpId = null; 
         let currentUserName = null;
         let currentUserPlate = null;
         let isAdmin = false; 
+        let isViewer = false; // 查詢專用帳號
         let isFetchingData = false; 
         
         let activeDateTab = 'today'; 
@@ -370,7 +372,7 @@
         }
 
         // ==========================================
-        // 🔄 網路連線核心 (強制執行真實 API 請求)
+        // 🔄 網路連線核心
         // ==========================================
         async function fetchWithRetry(url, options = {}, retries = 2, delay = 500) {
             try {
@@ -402,25 +404,20 @@
         // 📱 啟動與登入機制
         // ==========================================
         window.onload = function() {
-            const isIframe = window !== window.parent;
-            const isLocalBrowser = !LIFF_ID || LIFF_ID.includes("YOUR_LIFF");
-            
-            // 安全防護機制：如果不在真實 LINE App，自動隨機產生 ID 以避免舊的 USER_DEFAULT 自動登入
-            if (isIframe || isLocalBrowser) {
+            const isLocalBrowser = !LIFF_ID || LIFF_ID.includes("YOUR_LIFF") || window.location.hostname.includes("github.io") || window.location.hostname.includes("localhost") || window.location.hostname.includes("goog");
+
+            // 如果在電腦網頁開啟 (或預覽環境)，自動使用隨機碼模擬 LINE ID 以免自動登入，並確保登入窗彈出
+            if (isLocalBrowser || window !== window.parent) {
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
-                document.getElementById('header-status-text').innerText = "網頁預覽模式...";
+                document.getElementById('header-status-text').innerText = "網頁模式...";
+                // 使用隨機字串確保每次整理網頁都需要手動輸入密碼，方便測試
                 currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
                 fetchCloudData();
                 return;
             }
 
-            // 在真實手機版 LINE App 中，LIFF 超時防護 (超過 2.5 秒若未回應，強制進入登入畫面)
-            let initTimer = setTimeout(() => {
-                fetchCloudData();
-            }, 2500);
-
+            // 在真實 LINE 中，LIFF 初始化
             liff.init({ liffId: LIFF_ID }).then(() => {
-                clearTimeout(initTimer); 
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
@@ -431,7 +428,6 @@
                     liff.login();
                 }
             }).catch(err => { 
-                clearTimeout(initTimer);
                 document.getElementById('user-display').innerText = "LIFF 錯誤"; 
                 fetchCloudData(); 
             });
@@ -445,8 +441,16 @@
             document.getElementById('status-dot').classList.replace('bg-amber-400', 'bg-emerald-400');
             document.getElementById('status-dot').style.boxShadow = '0 0 5px rgba(52,211,153,0.8)';
             document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
-            document.getElementById('btn-settings').classList.remove('hidden');
-            if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
+            
+            // 權限分配
+            if (isViewer) {
+                document.getElementById('btn-settings').classList.add('hidden');
+                document.getElementById('nav-admin-btn').classList.add('hidden');
+            } else {
+                document.getElementById('btn-settings').classList.remove('hidden');
+                if (isAdmin) document.getElementById('nav-admin-btn').classList.remove('hidden');
+            }
+
             renderParkingLot();
         }
 
@@ -463,12 +467,11 @@
                     if (res.user) {
                         currentUserEmpId = res.user.empId; currentUserName = res.user.name; currentUserPlate = res.user.plate;
                         isAdmin = (currentUserEmpId === 'ADMIN');
+                        isViewer = (currentUserEmpId === 'VIEWER');
 
-                        if (res.user.requirePasswordChange) {
-                            // 已經登入過，但密碼為預設值，強制跳出密碼修改視窗
+                        if (res.user.requirePasswordChange && !isAdmin && !isViewer) {
                             document.getElementById('login-modal').classList.add('hidden');
                             document.getElementById('force-password-modal').classList.remove('hidden');
-                            document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI();
                         }
@@ -476,16 +479,13 @@
                         // 未綁定過，顯示登入視窗
                         document.getElementById('header-status-text').innerText = "請先登入";
                         document.getElementById('login-modal').classList.remove('hidden');
-                        document.getElementById('scroll-area').classList.add('blur-bg');
                     }
                 } else {
                     throw new Error(res.message);
                 }
             } catch (err) {
-                // 發生異常，確保登入畫面絕對不會被隱藏
                 document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
-                document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查 GAS 部署設定。</div>`;
@@ -517,8 +517,9 @@
             if (res.success) {
                 currentUserEmpId = res.empId; currentUserName = res.name; currentUserPlate = res.plate;
                 isAdmin = (currentUserEmpId === 'ADMIN');
+                isViewer = (currentUserEmpId === 'VIEWER');
                 
-                if (res.requirePasswordChange) {
+                if (res.requirePasswordChange && !isAdmin && !isViewer) {
                     document.getElementById('login-modal').classList.add('hidden');
                     document.getElementById('force-password-modal').classList.remove('hidden');
                 } else {
@@ -620,7 +621,7 @@
                     colorClass = 'bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-700 text-white ring-2 ring-indigo-300/50 shadow-lg z-20 scale-105 cursor-pointer';
                 }
 
-                if(isAdmin) { colorClass += " cursor-pointer hover:opacity-80"; }
+                if(isAdmin || isViewer) { colorClass += " cursor-pointer hover:opacity-80"; }
 
                 btn.className = `relative w-full h-[38px] rounded-md border-2 flex items-center justify-center text-center transition-all ${shapeClass} ${colorClass} overflow-hidden`;
                 btn.innerHTML = contentHTML;
@@ -635,8 +636,8 @@
             const sysId = spot.sysId || spot.id;
             const displayId = spot.displayId || spot.id;
 
-            // 管理員巡視
-            if (isAdmin) {
+            // 管理員 & VIEWER(查詢專用帳號) 巡視
+            if (isAdmin || isViewer) {
                 let statusText = '', detailsHtml = '';
                 let t_rel = spot.releaseTime ? `<p class="text-emerald-600 text-[10px] mt-1.5 font-bold">🕒 釋出: ${spot.releaseTime}</p>` : '';
                 let t_res = spot.reserveTime ? `<p class="text-indigo-500 text-[10px] mt-1.5 font-bold">🕒 預約: ${spot.reserveTime}</p>` : '';
@@ -657,7 +658,7 @@
                     let actualReserverName = spot.reserverName;
                     detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原持有者：${spot.ownerName} (工號: ${spot.ownerId})</p>${t_rel}<div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (工號: ${actualReserverId})</p><p>實際車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
                 }
-                showModal(`巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
+                showModal(`車位巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
                 return; 
             }
 
@@ -730,6 +731,7 @@
 
         function showMyReservation() {
             if (!currentUserEmpId) return;
+            if (isViewer) { showModal('查詢專用帳號', '查詢帳號無個人預約與釋出紀錄。', 'info', null, '關閉'); return; }
             if (isAdmin) { showModal('管理員身分', '您目前以總務管理員身分登入，無個人預約紀錄。', 'info', null, '關閉'); return; }
 
             let msg = '';
@@ -762,8 +764,10 @@
                 const isReserved = spot.status === 'reserved' || spot.status === 'mine' || isMine;
                 
                 if (filterValue === 'all') return true;
-                if (filterValue === 'assigned') return spot.ownerId !== 'GUEST';
-                if (filterValue === 'unassigned') return spot.ownerId === 'GUEST' || spot.status === 'available';
+                if (filterValue === 'employee_fixed') return spot.ownerId !== 'GUEST';
+                if (filterValue === 'guest_only') return spot.ownerId === 'GUEST';
+                if (filterValue === 'available_now') return spot.status === 'available';
+                if (filterValue === 'reserved_now') return isReserved;
                 return true;
             });
 
@@ -793,9 +797,12 @@
             const dataToExport = (db[activeDateTab] || []).filter(spot => {
                 const isMine = spot.status === 'mine' || (spot.status === 'reserved' && spot.reserverId === currentUserEmpId);
                 const isReserved = spot.status === 'reserved' || spot.status === 'mine' || isMine;
+                
                 if (filterValue === 'all') return true;
-                if (filterValue === 'assigned') return spot.ownerId !== 'GUEST';
-                if (filterValue === 'unassigned') return spot.ownerId === 'GUEST' || spot.status === 'available';
+                if (filterValue === 'employee_fixed') return spot.ownerId !== 'GUEST';
+                if (filterValue === 'guest_only') return spot.ownerId === 'GUEST';
+                if (filterValue === 'available_now') return spot.status === 'available';
+                if (filterValue === 'reserved_now') return isReserved;
                 return true;
             });
 
