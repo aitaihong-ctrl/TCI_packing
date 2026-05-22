@@ -39,6 +39,7 @@
                     <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_rgba(251,113,133,0.8)]" id="status-dot"></span>
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
+                <!-- 個人設定按鈕 -->
                 <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30 relative">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
@@ -60,7 +61,7 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 -->
+        <!-- 停車場主視圖 (預設開啟模糊背景) -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -172,6 +173,7 @@
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </button>
                     </div>
+                    <p class="text-[10px] text-slate-400 mt-2 ml-1">※ 變更密碼僅供未來換手機或換 LINE 帳號重新綁定時使用。</p>
                 </div>
                 <button onclick="apiChangePassword()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition-all mt-4 text-sm">儲存新密碼</button>
             </div>
@@ -189,7 +191,7 @@
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
-                <option value="all">全部車位</option><option value="assigned">已分配專屬車位</option><option value="unassigned">無專屬車位(空位/來賓)</option>
+                <option value="all">全部</option><option value="available">可預約</option><option value="reserved">已被預約</option><option value="fixed">未釋出</option><option value="guest">來賓</option>
             </select>
         </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
@@ -210,16 +212,8 @@
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
-            <div class="flex gap-2">
-                <button onclick="document.getElementById('csv-upload').click()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">匯入Users</button>
-                <input type="file" id="csv-upload" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
-                <button onclick="showHistoryPanel()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">歷史紀錄</button>
-            </div>
+            <button onclick="showHistoryPanel()" class="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold border border-white/20">歷史紀錄</button>
         </header>
-        <div class="bg-white p-2 border-b shadow-sm flex justify-between shrink-0 z-10">
-            <span class="text-xs font-extrabold text-slate-600 self-center">車位管理 (今日)</span>
-            <button onclick="openEditModal(null, true)" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">➕ 新增車位</button>
-        </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
@@ -255,28 +249,20 @@
     <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
-                <span id="admin-modal-title">編輯車位資料</span>
-                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="text-white hover:text-rose-200">&times;</button>
+                <span>編輯車位資料</span><span id="edit-sys-id" class="bg-rose-900/50 px-2 py-1 rounded text-xs font-mono"></span>
             </div>
             <div class="p-6 space-y-4 bg-slate-50/50">
-                <div id="edit-sys-id-container" class="hidden">
-                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">系統ID (必填，如: A99)</label>
-                    <input type="text" id="edit-sys-id-input" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase">
-                </div>
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase"></div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500"></div>
                 <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位類型</label><select id="edit-spot-type" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-rose-500 font-bold"><option value="employee">員工專屬位</option><option value="guest">來賓保留位</option></select></div>
                 <div id="edit-emp-fields" class="space-y-4 border-t border-slate-200 pt-4 mt-2">
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold shadow-sm"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold"></div>
                 </div>
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
             </div>
-            <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100">
-                <button id="btn-delete-spot" onclick="deleteSpotConfig()" class="px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl hover:bg-rose-100 hidden">刪除</button>
-                <div class="flex justify-end gap-3 w-full">
-                    <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
-                    <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-md shadow-rose-200 transition-colors">儲存</button>
-                </div>
+            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
+                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl">取消</button>
+                <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl">儲存變更</button>
             </div>
         </div>
     </div>
@@ -289,13 +275,13 @@
                 <p id="modal-message" class="text-slate-700 text-sm leading-relaxed font-medium">內容</p>
                 <div id="plate-input-container" class="hidden mt-5 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
                     <label class="block text-xs font-extrabold text-indigo-800 mb-2">請輸入您本次停放的車牌</label>
-                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono shadow-sm" placeholder="如: ABC-1234">
+                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono" placeholder="如: ABC-1234">
                     <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-2 hidden">❌ 請輸入車牌號碼</p>
                 </div>
             </div>
             <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
                 <button id="modal-cancel-btn" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hidden">取消</button>
-                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-colors">確定</button>
+                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl">確定</button>
             </div>
         </div>
     </div>
@@ -341,7 +327,7 @@
         }
 
         // ==========================================
-        // 🔄 網路連線核心 (強制執行真實 API 請求)
+        // 🔄 網路連線核心 (無模擬資料，強制執行真實 API 請求)
         // ==========================================
         async function fetchWithRetry(url, options = {}, retries = 2, delay = 500) {
             try {
@@ -373,20 +359,28 @@
         // 📱 啟動與登入機制
         // ==========================================
         window.onload = function() {
-            const isIframe = window !== window.parent;
+            // 安全防護機制：偵測是否在預覽環境
+            let isPreview = false;
+            try {
+                isPreview = (window !== window.top) || window.location.hostname.includes("usercontent") || window.location.hostname.includes("goog");
+            } catch(e) {
+                isPreview = true; // 存取被阻擋時代表在嚴格的 iframe 沙盒內
+            }
             
-            // 預覽視窗防護，確保每次取得隨機 ID，不會卡死或自動登入
-            if (isIframe) {
+            // 預覽視窗防護，略過 LIFF 初始化跳轉以免無限迴圈閃爍
+            if (isPreview || LIFF_ID.includes("YOUR_LIFF")) {
+                console.log("預覽模式：已略過 LIFF 跳轉，避免畫面閃爍");
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
                 document.getElementById('header-status-text').innerText = "預覽連線中...";
-                currentUserLineId = "PREV_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+                // 使用隨機 LineID 確保每次重新載入都會視為未登入狀態，正常顯示登入畫面
+                currentUserLineId = "PREVIEW_" + Math.random().toString(36).substr(2, 9);
                 fetchCloudData();
                 return;
             }
 
             liff.init({ liffId: LIFF_ID }).then(() => {
                 if (!liff.isLoggedIn()) {
-                    liff.login();
+                    liff.login(); 
                 } else {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
@@ -395,6 +389,7 @@
                     });
                 }
             }).catch(err => { 
+                console.error("LIFF Error:", err);
                 document.getElementById('user-display').innerText = "LIFF 錯誤"; 
                 fetchCloudData(); 
             });
@@ -415,6 +410,7 @@
 
         async function fetchCloudData() {
             try {
+                // 發送真實請求到您的 GAS
                 const res = await fetchWithRetry(`${GAS_API_URL}?action=getData&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
                 
                 if (res.success) {
@@ -432,6 +428,7 @@
                             unlockUI();
                         }
                     } else {
+                        // 尚未綁定，顯示登入視窗
                         document.getElementById('login-modal').classList.remove('hidden');
                         document.getElementById('scroll-area').classList.add('blur-bg');
                     }
@@ -439,18 +436,13 @@
                     throw new Error(res.message);
                 }
             } catch (err) {
+                // 網路錯誤攔截：單純顯示錯誤訊息在登入視窗下方，不產生多餘按鈕與跳轉邏輯
+                document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
                 document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
-                document.getElementById('btn-login-submit').classList.remove('hidden');
-                
-                errorMsg.innerHTML = `
-                    <div class="bg-rose-50 text-left p-3 rounded-lg shadow-sm border border-rose-200 mt-2">
-                        <p class="font-bold text-rose-600 text-xs mb-1">❌ 網路連線被阻擋</p>
-                        <p class="text-[11px] text-rose-500 mb-2">請確認您的 Google Apps Script 已經「發布為新版本」且權限設為「所有人」。</p>
-                        <button onclick="window.open(location.href, '_blank')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-xs transition-colors">🚀 在獨立分頁中開啟測試</button>
-                    </div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查 GAS 部署設定或網路狀態。</div>`;
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -461,7 +453,7 @@
             const errorMsg = document.getElementById('login-error-msg');
 
             if (!empId || !password) { 
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 請填寫完整工號與密碼</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 請填寫完整工號與密碼</div>`;
                 errorMsg.classList.remove('hidden'); 
                 return; 
             }
@@ -471,6 +463,7 @@
             btn.innerText = "驗證中...";
             
             const res = await apiRequest("bindUser", { empId: empId, password: password });
+            
             btn.innerText = originalText;
 
             if (res.success) {
@@ -483,9 +476,10 @@
                 } else {
                     unlockUI();
                 }
+
                 await fetchCloudData(); 
             } else {
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ ${res.message}</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -497,25 +491,25 @@
             const currentOldPwd = oldPwdInput ? oldPwdInput.value : "";
 
             if (!newPwd || newPwd.length < 4) {
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 密碼不能為空，且至少需4碼！</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 密碼不能為空，且至少需4碼！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
             if (newPwd === currentOldPwd || newPwd === "1234" || newPwd === "Aa123456" || newPwd === "ADMIN1234") {
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 新密碼不可與預設密碼相同！</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 新密碼不可與預設密碼相同！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
 
             const btn = document.getElementById('btn-force-submit');
             btn.innerText = "變更中...";
             const res = await apiRequest("changePassword", { newPassword: newPwd });
-            btn.innerText = "確認變更並進入";
+            btn.innerText = "確認變更並進入系統";
 
             if (res.success) {
                 errorMsg.classList.add('hidden');
                 unlockUI(); 
                 showModal('安全性設定完成', '密碼變更成功，歡迎進入系統！', 'success', null, '關閉');
             } else {
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ ${res.message}</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -527,7 +521,7 @@
             const res = await apiRequest("changePassword", { newPassword: newPwd });
             if (res.success) {
                 document.getElementById('settings-modal').classList.add('hidden');
-                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次登入時請使用新密碼。</span>', 'success', null, '關閉');
+                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次重新綁定裝置時請使用新密碼。</span>', 'success', null, '關閉');
             } else {
                 showModal('錯誤', res.message, 'error');
             }
@@ -552,11 +546,13 @@
                 let shapeClass = (spot.zone === 'A') ? 'rounded-l-none border-l-0' : 'rounded-r-none border-r-0';
                 let colorClass = '';
 
+                // 決定要顯示的車號
                 let displayPlate = '';
                 if (spot.status === 'fixed' || spot.status === 'guest') displayPlate = spot.ownerPlate;
                 else if (spot.status === 'reserved' || spot.status === 'mine') displayPlate = spot.reserverPlate || spot.myPlate;
                 else if (spot.status === 'available') displayPlate = '空位';
 
+                // 在車格按鈕內同時顯示車位編號與車號
                 let contentHTML = `
                     <div class="flex flex-col items-center justify-center leading-tight">
                         <span class="font-extrabold tracking-tighter text-[11px]">${spot.displayId || spot.id}</span>
@@ -592,6 +588,7 @@
             const sysId = spot.sysId || spot.id;
             const displayId = spot.displayId || spot.id;
 
+            // 管理員巡視
             if (isAdmin) {
                 let statusText = '', detailsHtml = '';
                 let t_rel = spot.releaseTime ? `<p class="text-emerald-600 text-[10px] mt-1.5 font-bold">🕒 釋出: ${spot.releaseTime}</p>` : '';
@@ -599,26 +596,27 @@
 
                 if (spot.status === 'guest') {
                     statusText = '<span class="text-purple-600 font-black">來賓保留位</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>管理單位：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b></p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'fixed') {
-                    statusText = '<span class="text-slate-500 font-black">未釋出 (原車主專屬)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>持有同仁：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>登記車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    statusText = '<span class="text-slate-500 font-black">未釋出 (專屬保留)</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'available') {
                     statusText = '<span class="text-emerald-600 font-black">已釋出 (空位)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b></p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
                 } else if (spot.status === 'reserved' || spot.status === 'mine') {
                     statusText = '<span class="text-indigo-600 font-black">已被預約</span>';
                     let actualPlate = spot.reserverPlate || spot.myPlate;
                     let actualReserverId = spot.reserverId;
                     let actualReserverName = spot.reserverName;
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原車主：${spot.ownerName} (${spot.ownerId})</p><div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (${actualReserverId})</p><p>車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原車主：${spot.ownerName}</p><div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (${actualReserverId})</p><p>車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
                 }
                 showModal(`車位巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
                 return; 
             }
 
+            // 一般員工邏輯
             if (spot.status === 'guest') {
-                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>管理單位：<b>${spot.ownerName}</b> (${spot.ownerId})<br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
+                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
             } 
             else if (spot.status === 'fixed') {
                 if (spot.ownerId === currentUserEmpId) {
@@ -633,7 +631,7 @@
                             }, '確定釋出', '保留自用');
                     }
                 } else {
-                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>原車主：<b>${spot.ownerName}</b> (${spot.ownerId})<br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁尚未釋出此車位。</span>`, 'error', null, '我知道了');
+                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁今日正常上班，尚未釋出此車位。</span>`, 'error', null, '我知道了');
                 }
             } 
             else if (spot.status === 'available') {
@@ -655,7 +653,7 @@
                     else if (alreadyBooked) showModal('預約限制', `您在【${isToday?'今日':'明日'}】已有一筆預約紀錄。`, 'error', null, '我知道了');
                     else {
                         if (!isToday && currentHour < 18) showModal('尚未開放', `車位 <b>${displayId}</b> 的預約將於「今日 18:00」準時開放。`, 'warning', null, '我知道了');
-                        else showModal('確認預約', `您即將預約【${isToday?'今日':'明日'}】的 <b class="text-indigo-600 text-lg">${displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
+                        else showModal('確認預約', `您即初預約【${isToday?'今日':'明日'}】的 <b class="text-indigo-600 text-lg">${displayId}</b>。<br><br><span class="text-sm font-bold text-indigo-700">請填寫您本次停放的車牌號碼：</span>`, 'info', 
                             async () => {
                                 const plateInput = document.getElementById('modal-plate-input').value.trim().toUpperCase();
                                 if (!plateInput) { document.getElementById('modal-plate-error').classList.remove('hidden'); return false; }
@@ -674,7 +672,7 @@
                 }, '確定取消', '保留車位');
             } 
             else if (spot.status === 'reserved') {
-                showModal('已被預約', `車位 <b>${displayId}</b> 已被預約。<br><br>目前使用人：<b>${spot.reserverName}</b> (${spot.reserverId})<br>停放車號：<b class="text-rose-600 font-mono">${spot.reserverPlate}</b><br><br><span class="text-xs text-gray-500">請尋找其他綠色空位。</span>`, 'error', null, '關閉');
+                showModal('已被預約', `車位 <b>${displayId}</b> 已被其他同仁預約囉！`, 'error', null, '關閉');
             }
         }
 
@@ -787,6 +785,20 @@
             document.getElementById('admin-modal').classList.remove('hidden');
         }
 
+        function exportAdminSpots() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF系統ID,顯示編號,狀態,車主工號,車主姓名,預設車號\n";
+            (db.today || []).forEach(spot => {
+                const isGuest = spot.ownerId === 'GUEST';
+                const statusText = spot.status === 'guest' ? '來賓保留' : (spot.status === 'fixed' ? '未釋出' : (spot.status === 'available' ? '可預約' : '已被預約'));
+                const ownerName = isGuest ? '來賓專用' : spot.ownerName;
+                csvContent += `${spot.sysId || spot.id},${spot.displayId || spot.id},${statusText},${spot.ownerId},${ownerName},${spot.ownerPlate}\n`;
+            });
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `總務車位管理資訊.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
         function openEditModal(sysId, isAdd = false) {
             isAddingSpot = isAdd;
             editingSpotId = sysId;
@@ -896,6 +908,7 @@
             event.target.value = ''; // reset
         }
 
+        // 歷史紀錄相關邏輯
         async function showHistoryPanel() {
             if (!isAdmin) return;
             const tbody = document.getElementById('history-tbody');
@@ -904,18 +917,109 @@
 
             const res = await fetchWithRetry(`${GAS_API_URL}?action=getHistory&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
             if (res.success) {
-                tbody.innerHTML = '';
-                if (!res.logs || res.logs.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-slate-400 font-bold">尚無紀錄</td></tr>';
-                    return;
-                }
-                res.logs.forEach(log => {
-                    let actionColor = log.action.includes("釋出") ? "text-emerald-600 bg-emerald-50 border-emerald-100" : log.action.includes("預約") ? "text-indigo-600 bg-indigo-50 border-indigo-100" : log.action.includes("取消") ? "text-amber-600 bg-amber-50 border-amber-100" : "text-rose-600 bg-rose-50 border-rose-100";
-                    tbody.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors"><td class="py-2.5 px-2 text-[9px] text-slate-400 font-mono">${log.timestamp}</td><td class="py-2.5 px-2 font-black text-xs ${log.dateTab==='today'?'text-blue-500':'text-teal-500'}">${log.dateTab==='today'?'今日':'明日'}</td><td class="py-2.5 px-2 font-bold text-slate-700">${log.displayId}<br><span class="text-[8px] text-slate-400 font-mono font-normal">Sys:${log.sysId || '-'}</span></td><td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-black border ${actionColor}">${log.action}</span></td><td class="py-2.5 px-2 text-slate-600 font-bold leading-tight">${log.actor}<br><span class="text-[9px] text-slate-400 font-normal block truncate w-24">${log.details}</span></td></tr>`;
-                });
+                allHistoryLogs = res.logs || [];
+                renderHistoryTable(allHistoryLogs);
             } else {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center text-rose-500 py-6 font-bold">載入失敗: ${res.message}</td></tr>`;
             }
+        }
+
+        function filterHistory() {
+            const start = document.getElementById('history-start').value;
+            const end = document.getElementById('history-end').value;
+            const action = document.getElementById('history-action').value;
+
+            const filtered = allHistoryLogs.filter(log => {
+                let passDate = true;
+                if (start || end) {
+                    try {
+                        const logDateStr = log.timestamp.split(' ')[0];
+                        const logDateObj = new Date(logDateStr);
+                        if (start) {
+                            const sDate = new Date(start);
+                            sDate.setHours(0,0,0,0);
+                            if (logDateObj < sDate) passDate = false;
+                        }
+                        if (end) {
+                            const eDate = new Date(end);
+                            eDate.setHours(23,59,59,999);
+                            if (logDateObj > eDate) passDate = false;
+                        }
+                    } catch(e) {}
+                }
+
+                let passAction = true;
+                if (action !== 'all') {
+                    if (!log.action.includes(action)) passAction = false;
+                }
+
+                return passDate && passAction;
+            });
+            renderHistoryTable(filtered);
+        }
+
+        function renderHistoryTable(logs) {
+            const tbody = document.getElementById('history-tbody');
+            tbody.innerHTML = '';
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-slate-400 font-bold">尚無符合條件的紀錄</td></tr>';
+                return;
+            }
+            logs.forEach(log => {
+                let actionColor = log.action.includes("釋出") ? "text-emerald-600 bg-emerald-50 border-emerald-100" : log.action.includes("預約") ? "text-indigo-600 bg-indigo-50 border-indigo-100" : log.action.includes("取消") || log.action.includes("收回") ? "text-amber-600 bg-amber-50 border-amber-100" : "text-rose-600 bg-rose-50 border-rose-100";
+                let displayDateTab = log.dateTab === 'today' ? '今日' : (log.dateTab === 'tomorrow' ? '明日' : '-');
+                let dateTabColor = log.dateTab === 'today' ? 'text-blue-500' : (log.dateTab === 'tomorrow' ? 'text-teal-500' : 'text-gray-500');
+                
+                tbody.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td class="py-2.5 px-2 text-[9px] text-slate-400 font-mono">${log.timestamp}</td>
+                    <td class="py-2.5 px-2 font-bold text-slate-700">${log.displayId}<br><span class="text-[8px] text-slate-400 font-mono font-normal">Sys:${log.sysId || '-'}</span></td>
+                    <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-black border ${actionColor}">${log.action}</span><br><span class="text-[8px] font-black ${dateTabColor}">${displayDateTab}</span></td>
+                    <td class="py-2.5 px-2 text-slate-600 font-bold leading-tight">${log.actor}<br><span class="text-[9px] text-slate-400 font-normal block truncate w-24">${log.details}</span></td>
+                </tr>`;
+            });
+        }
+
+        function exportHistoryCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF發生時間,目標日期,系統ID,顯示編號,動作,操作者,操作詳情\n";
+            
+            const start = document.getElementById('history-start').value;
+            const end = document.getElementById('history-end').value;
+            const action = document.getElementById('history-action').value;
+
+            const filtered = allHistoryLogs.filter(log => {
+                let passDate = true;
+                if (start || end) {
+                    try {
+                        const logDateStr = log.timestamp.split(' ')[0];
+                        const logDateObj = new Date(logDateStr);
+                        if (start) {
+                            const sDate = new Date(start);
+                            sDate.setHours(0,0,0,0);
+                            if (logDateObj < sDate) passDate = false;
+                        }
+                        if (end) {
+                            const eDate = new Date(end);
+                            eDate.setHours(23,59,59,999);
+                            if (logDateObj > eDate) passDate = false;
+                        }
+                    } catch(e) {}
+                }
+                let passAction = true;
+                if (action !== 'all') {
+                    if (!log.action.includes(action)) passAction = false;
+                }
+                return passDate && passAction;
+            });
+
+            filtered.forEach(log => {
+                let displayDateTab = log.dateTab === 'today' ? '今日' : (log.dateTab === 'tomorrow' ? '明日' : '-');
+                csvContent += `${log.timestamp},${displayDateTab},${log.sysId || ''},${log.displayId || ''},${log.action},${log.actor},${log.details}\n`;
+            });
+
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `歷史紀錄匯出.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         // ==========================================
