@@ -61,20 +61,40 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
         </div>
 
-        <!-- 停車場主視圖 (恢復最穩定的相對排版) -->
-        <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700 w-full" id="scroll-area">
-            <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
-            <div class="relative z-10 w-full flex justify-between px-2 py-10 h-max">
-                <!-- 左側車道 18% -->
-                <div class="w-[18%] flex justify-center"><div class="sticky top-[40vh] h-max writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">Entrance &darr;</div></div>
-                <!-- A區 28% -->
-                <div id="zone-A" class="flex flex-col gap-2 w-[28%] my-6"></div>
-                <!-- 中央走道 4% -->
-                <div class="w-[4%] flex justify-center"><div class="w-1.5 bg-slate-300/80 rounded-full my-12 shadow-inner"></div></div>
-                <!-- B區 28% -->
-                <div id="zone-B" class="flex flex-col gap-2 w-[28%] my-6"></div>
-                <!-- 右側車道 18% -->
-                <div class="w-[18%] flex justify-center"><div class="sticky top-[40vh] h-max writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">&uarr; Exit</div></div>
+        <!-- 停車場主視圖 (精緻環狀車道設計) -->
+        <main class="flex-1 min-h-0 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700 w-full" id="scroll-area">
+            
+            <!-- 完美環形車道背景 (利用純 CSS 邊框繪製連續彎道，不干擾排版) -->
+            <div class="absolute top-6 bottom-6 left-2 right-2 border-[36px] border-slate-700 rounded-[60px] pointer-events-none shadow-[inset_0_0_15px_rgba(0,0,0,0.6)] z-0"></div>
+            <!-- 道路中心虛線 -->
+            <div class="absolute top-6 bottom-6 left-2 right-2 border-[2px] border-dashed border-white/30 rounded-[60px] m-[17px] pointer-events-none z-0"></div>
+
+            <div class="relative z-10 w-full flex justify-between px-2 py-10 h-max min-h-full">
+                <!-- 左側車道文字 (與 36px 邊框完美對齊) -->
+                <div class="w-[36px] flex justify-center flex-shrink-0 z-10">
+                    <div class="sticky top-[40vh] h-max py-4 px-1.5 rounded-full bg-slate-800/90 backdrop-blur-sm flex flex-col items-center justify-center border border-slate-600/50 shadow-lg">
+                        <span class="writing-vertical text-emerald-400 font-black text-[11px] tracking-[0.2em] uppercase drop-shadow-md">Entrance</span>
+                        <span class="text-emerald-400 font-black text-xs mt-2">&darr;</span>
+                    </div>
+                </div>
+
+                <!-- 停車區 (A & B) -->
+                <div class="flex-1 flex justify-between px-1 sm:px-2 z-10">
+                    <!-- A區 -->
+                    <div id="zone-A" class="flex flex-col gap-2 w-[46%] my-6"></div>
+                    <!-- 中央分隔線 -->
+                    <div class="w-[2px] bg-slate-300/80 rounded-full my-12 shadow-inner"></div>
+                    <!-- B區 -->
+                    <div id="zone-B" class="flex flex-col gap-2 w-[46%] my-6"></div>
+                </div>
+
+                <!-- 右側車道文字 (與 36px 邊框完美對齊) -->
+                <div class="w-[36px] flex justify-center flex-shrink-0 z-10">
+                    <div class="sticky top-[40vh] h-max py-4 px-1.5 rounded-full bg-slate-800/90 backdrop-blur-sm flex flex-col items-center justify-center border border-slate-600/50 shadow-lg">
+                        <span class="text-rose-400 font-black text-xs mb-2">&uarr;</span>
+                        <span class="writing-vertical text-rose-400 font-black text-[11px] tracking-[0.2em] uppercase drop-shadow-md">Exit</span>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -185,15 +205,16 @@
         </div>
     </div>
 
-    <!-- 報表明細視窗 (極簡化結構，保證可捲動) -->
-    <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] flex-col slide-in-bottom" style="display: none;">
+    <!-- 報表明細視窗 -->
+    <!-- 修復點：最外層維持 display none / flex 切換，內層 flex-1 配合 relative/absolute 強制產生捲動條 -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] flex-col slide-in-bottom h-[100dvh]" style="display: none;">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('report-modal').style.display='none'" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide" id="report-title">預約明細表</h2>
             <button onclick="exportCSV()" class="bg-indigo-600/90 px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm border border-indigo-400/50">匯出 CSV</button>
         </header>
         
-        <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0">
+        <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
                 <option value="all">全部車位</option>
@@ -204,12 +225,12 @@
             </select>
         </div>
         
-        <!-- 表格捲動區域 -->
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="w-full overflow-x-auto no-scrollbar">
+        <!-- 表格捲動區域：完全依賴內聯的 relative 和 absolute，不再被行動版 flex 高度限制卡死 -->
+        <div class="flex-1 relative p-3 flex flex-col gap-2 min-h-0">
+            <div class="flex-1 relative bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="absolute inset-0 overflow-auto no-scrollbar">
                     <table class="min-w-full text-xs text-left whitespace-nowrap">
-                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
+                        <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 sticky top-0 z-20 shadow-sm">
                             <tr>
                                 <th class="py-3.5 px-2 font-bold w-[12%] text-center">車位</th>
                                 <th class="py-3.5 px-2 font-bold w-[18%]">狀態</th>
@@ -218,16 +239,16 @@
                                 <th class="py-3.5 px-2 font-bold w-[20%]">實際車號</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100" id="report-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-50" id="report-tbody"></tbody>
                     </table>
                 </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-2">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
+            <p class="shrink-0 text-[10px] font-bold text-slate-400 text-center pb-2">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
         </div>
     </div>
 
-    <!-- 總務後台視窗 (極簡化結構，保證可捲動) -->
-    <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] flex-col slide-in-bottom" style="display: none;">
+    <!-- 總務後台視窗 -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] flex-col slide-in-bottom h-[100dvh]" style="display: none;">
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('admin-modal').style.display='none'" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
@@ -237,7 +258,7 @@
                 <button onclick="showHistoryPanel()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">歷史紀錄</button>
             </div>
         </header>
-        <div class="bg-white p-2 border-b shadow-sm flex justify-between items-center shrink-0">
+        <div class="bg-white p-2 border-b shadow-sm flex justify-between items-center shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600 ml-2">車位管理 (今日)</span>
             <div class="flex gap-2">
                 <button onclick="exportAdminSpots()" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">匯出車位</button>
@@ -245,12 +266,11 @@
             </div>
         </div>
         
-        <!-- 表格捲動區域 -->
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="w-full overflow-x-auto no-scrollbar">
+        <div class="flex-1 relative p-3 flex flex-col gap-2 min-h-0">
+            <div class="flex-1 relative bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="absolute inset-0 overflow-auto no-scrollbar">
                     <table class="min-w-full text-xs text-left whitespace-nowrap">
-                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
+                        <thead class="bg-rose-50/50 text-rose-900 border-b border-rose-100 sticky top-0 z-20 shadow-sm">
                             <tr>
                                 <th class="py-3.5 px-2 font-bold w-[15%] text-center">車位</th>
                                 <th class="py-3.5 px-2 font-bold w-[25%]">工號</th>
@@ -259,20 +279,20 @@
                                 <th class="py-3.5 px-2 font-bold w-[15%] text-center">操作</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100" id="admin-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-50" id="admin-tbody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 歷史紀錄查詢視窗 (極簡化結構，保證可捲動) -->
-    <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] flex-col slide-in-bottom" style="display: none;">
+    <!-- 歷史紀錄查詢視窗 -->
+    <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] flex-col slide-in-bottom h-[100dvh]" style="display: none;">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('history-modal').style.display='none'" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide">系統歷史紀錄</h2><div class="w-16"></div>
         </header>
-        <div class="bg-white p-3 border-b shadow-sm flex flex-col gap-2 shrink-0">
+        <div class="bg-white p-3 border-b shadow-sm flex flex-col gap-2 shrink-0 z-10">
             <div class="flex gap-2 items-center">
                 <input type="date" id="history-start" class="text-xs border rounded p-1.5 flex-1 outline-none focus:ring-1 focus:ring-indigo-500">
                 <span class="text-xs text-gray-500 font-bold">至</span>
@@ -295,12 +315,11 @@
             </div>
         </div>
         
-        <!-- 表格捲動區域 -->
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="w-full overflow-x-auto no-scrollbar">
+        <div class="flex-1 relative p-3 flex flex-col gap-2 min-h-0">
+            <div class="flex-1 relative bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="absolute inset-0 overflow-auto no-scrollbar">
                     <table class="min-w-full text-xs text-left whitespace-nowrap">
-                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 z-20 shadow-sm">
                             <tr>
                                 <th class="py-3 px-2 font-bold">發生時間</th>
                                 <th class="py-3 px-2 font-bold">目標</th>
@@ -308,11 +327,11 @@
                                 <th class="py-3 px-2 font-bold">操作者</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100" id="history-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                     </table>
                 </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-2">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
+            <p class="shrink-0 text-[10px] font-bold text-slate-400 text-center pb-2">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
