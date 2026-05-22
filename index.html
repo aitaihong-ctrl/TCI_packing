@@ -57,66 +57,101 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">已被預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
         </div>
 
-        <!-- 停車場主視圖 (精準數學排版) -->
+        <!-- 停車場主視圖 (終極純 CSS 防跑版・數學精準排版) -->
         <main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar bg-[#f1f5f9] w-full relative blur-bg transition-all duration-700" id="scroll-area">
             
-            <!-- 內容包裹區 (自動隨資料向下延展) -->
-            <div class="relative w-full min-h-full py-8 px-2 flex">
+            <!-- 滾動內容包裹層 (這層會隨資料撐高，確保背景跟著變長) -->
+            <div class="relative w-full min-h-full">
                 
-                <!-- 💡 完美環形車道背景：使用純 CSS border 繪製，絕對不會變形 -->
-                <div class="absolute inset-y-4 inset-x-2 border-[32px] border-slate-700 rounded-[50px] pointer-events-none shadow-[inset_0_0_15px_rgba(0,0,0,0.6)] z-0"></div>
-                <!-- 道路中心虛線 -->
-                <div class="absolute inset-y-4 inset-x-2 border-[2px] border-dashed border-white/30 rounded-[50px] m-[15px] pointer-events-none z-0"></div>
-
-                <!-- 左側車道 (寬度精確設定為 32px，完美疊合柏油路) -->
-                <div class="w-[32px] relative flex justify-center shrink-0 z-10">
-                    <!-- 🚗 視差休旅車 (SUV) -->
-                    <div id="interactive-suv" class="absolute z-20 transition-transform duration-200 ease-out w-[24px]" style="top: 0px; transform: translateY(0px);">
-                        <svg viewBox="0 0 100 210" class="w-full h-auto drop-shadow-[0_6px_8px_rgba(0,0,0,0.6)]">
-                            <rect x="6" y="25" width="14" height="40" rx="4" fill="#0f172a" />
-                            <rect x="80" y="25" width="14" height="40" rx="4" fill="#0f172a" />
-                            <rect x="6" y="145" width="14" height="40" rx="4" fill="#0f172a" />
-                            <rect x="80" y="145" width="14" height="40" rx="4" fill="#0f172a" />
-                            <rect x="15" y="10" width="70" height="190" rx="20" fill="#e2e8f0" />
-                            <rect x="15" y="10" width="70" height="186" rx="20" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
-                            <path d="M 22 60 L 78 60 L 84 90 L 16 90 Z" fill="#1e293b" opacity="0.95" />
-                            <path d="M 26 160 L 74 160 L 78 140 L 22 140 Z" fill="#1e293b" opacity="0.95" />
-                            <rect x="32" y="100" width="36" height="35" rx="6" fill="#0f172a" opacity="0.8" />
-                            <path d="M 20 12 L 32 12 L 34 20 L 18 20 Z" fill="#fef08a" />
-                            <path d="M 80 12 L 68 12 L 66 20 L 82 20 Z" fill="#fef08a" />
-                            <rect x="18" y="190" width="18" height="6" rx="2" fill="#ef4444" />
-                            <rect x="64" y="190" width="18" height="6" rx="2" fill="#ef4444" />
-                            <rect x="5" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
-                            <rect x="85" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
-                        </svg>
-                    </div>
-
-                    <!-- Entrance 標示牌 (修改為 top-[25vh]) -->
-                    <div class="sticky top-[25vh] h-max py-4 px-1 rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 mt-10">
-                        <span class="writing-vertical text-emerald-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Entrance</span>
-                        <span class="text-emerald-400 font-black text-sm mt-1">&darr;</span>
-                    </div>
+                <!-- 💡 完美環形車道背景：使用純 CSS 巢狀 DIV 繪製，絕對不會變形斷裂 -->
+                <div class="absolute top-4 bottom-4 left-2 right-2 bg-slate-700 rounded-[40px] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-0 overflow-hidden border border-slate-600">
+                    <!-- 內側挖空 (形成厚度 40px 的環狀路面) -->
+                    <div class="absolute top-[40px] bottom-[40px] left-[40px] right-[40px] bg-[#f1f5f9] rounded-[24px] shadow-[0_0_15px_rgba(0,0,0,0.5)]"></div>
+                    <!-- 車道中心虛線 -->
+                    <div class="absolute top-[20px] bottom-[20px] left-[20px] right-[20px] border-[2px] border-dashed border-white/30 rounded-[30px] pointer-events-none"></div>
                 </div>
 
-                <!-- 中央停車區塊 -->
-                <div class="flex-1 mx-2 flex justify-between bg-white/70 backdrop-blur-sm rounded-2xl p-2 shadow-sm border border-white z-10 h-max min-h-[400px] pointer-events-auto">
-                    <div id="zone-A" class="flex flex-col gap-2 w-[48%] my-2"></div>
-                    <div class="w-[2px] bg-slate-300/80 rounded-full mx-1 my-6 shadow-inner shrink-0"></div>
-                    <div id="zone-B" class="flex flex-col gap-2 w-[48%] my-2"></div>
-                </div>
+                <!-- 內容與互動層 -->
+                <div class="relative z-10 w-full min-h-full flex">
+                    
+                    <!-- 🚧 左側 Entrance 標示牌與車輛 (精準定位於左側虛線 left: 28px) -->
+                    <div class="absolute left-[28px] top-0 bottom-0 pointer-events-none z-20">
+                        <!-- 白色 SUV (入口車道) -->
+                        <div id="interactive-suv-entrance" class="absolute z-50 transition-transform duration-200 ease-out w-[26px] -ml-[13px]" style="top: 10px; transform: translateY(0px); filter: drop-shadow(0px 8px 8px rgba(0,0,0,0.7));">
+                            <svg viewBox="0 0 100 210" class="w-full h-auto rotate-180">
+                                <!-- 輪胎 -->
+                                <rect x="6" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="80" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="6" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="80" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                                <!-- 車身主體 -->
+                                <rect x="15" y="10" width="70" height="190" rx="20" fill="#e2e8f0" />
+                                <rect x="15" y="10" width="70" height="186" rx="20" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+                                <path d="M 22 60 L 78 60 L 84 90 L 16 90 Z" fill="#1e293b" opacity="0.95" />
+                                <path d="M 26 160 L 74 160 L 78 140 L 22 140 Z" fill="#1e293b" opacity="0.95" />
+                                <rect x="32" y="100" width="36" height="35" rx="6" fill="#0f172a" opacity="0.8" />
+                                <path d="M 20 12 L 32 12 L 34 20 L 18 20 Z" fill="#fef08a" />
+                                <path d="M 80 12 L 68 12 L 66 20 L 82 20 Z" fill="#fef08a" />
+                                <rect x="18" y="190" width="18" height="6" rx="2" fill="#ef4444" />
+                                <rect x="64" y="190" width="18" height="6" rx="2" fill="#ef4444" />
+                                <rect x="5" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+                                <rect x="85" y="82" width="10" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- 標示牌 -->
+                        <div class="sticky top-[25vh] h-max py-4 w-[28px] -ml-[14px] rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 pointer-events-auto z-30 mt-10">
+                            <span class="writing-vertical text-emerald-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Entrance</span>
+                            <span class="text-emerald-400 font-black text-sm mt-1">&darr;</span>
+                        </div>
+                    </div>
 
-                <!-- 右側車道 (寬度精確設定為 32px) -->
-                <div class="w-[32px] relative flex justify-center shrink-0 z-10">
-                    <!-- Exit 標示牌 (修改為 top-[25vh]) -->
-                    <div class="sticky top-[25vh] h-max py-4 px-1 rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 mt-10">
-                        <span class="text-rose-400 font-black text-sm mb-1">&uarr;</span>
-                        <span class="writing-vertical text-rose-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Exit</span>
+                    <!-- 🅿️ 中央停車區塊 (精準置入中央挖空區塊，完全避開車道 border) -->
+                    <!-- margin: 56px 48px; (上下避開外框 16px+內挖 40px，左右避開外框 8px+內挖 40px) -->
+                    <div class="flex-1 flex justify-between bg-white/70 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-white z-10 pointer-events-auto h-max min-h-[400px]" style="margin: 56px 48px;">
+                        <!-- A區 -->
+                        <div id="zone-A" class="flex flex-col gap-2 w-[47%] my-2"></div>
+                        <!-- 中央分隔線 -->
+                        <div class="w-[2px] bg-slate-300/80 rounded-full mx-1 my-6 shadow-inner shrink-0"></div>
+                        <!-- B區 -->
+                        <div id="zone-B" class="flex flex-col gap-2 w-[47%] my-2"></div>
+                    </div>
+
+                    <!-- 🚧 右側 Exit 標示牌與車輛 (精準定位於右側虛線 right: 28px) -->
+                    <div class="absolute right-[28px] top-0 bottom-0 pointer-events-none z-20">
+                        <!-- 紅色 SUV (出口車道) -->
+                        <div id="interactive-suv-exit" class="absolute z-50 transition-transform duration-200 ease-out w-[26px] -mr-[13px]" style="top: 10px; transform: translateY(1000px); filter: drop-shadow(0px 8px 8px rgba(0,0,0,0.7));">
+                            <svg viewBox="0 0 100 210" class="w-full h-auto">
+                                <!-- 輪胎 -->
+                                <rect x="6" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="80" y="25" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="6" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                                <rect x="80" y="145" width="14" height="40" rx="4" fill="#0f172a" />
+                                <!-- 櫻桃紅車體 -->
+                                <rect x="15" y="10" width="70" height="190" rx="20" fill="#e2e8f0" />
+                                <rect x="15" y="10" width="70" height="186" rx="20" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>
+                                <path d="M 22 60 L 78 60 L 84 90 L 16 90 Z" fill="#1e293b" opacity="0.95" />
+                                <path d="M 26 160 L 74 160 L 78 140 L 22 140 Z" fill="#1e293b" opacity="0.95" />
+                                <rect x="32" y="100" width="36" height="35" rx="6" fill="#0f172a" opacity="0.8" />
+                                <path d="M 20 12 L 32 12 L 34 20 L 18 20 Z" fill="#fef08a" />
+                                <path d="M 80 12 L 68 12 L 66 20 L 82 20 Z" fill="#fef08a" />
+                                <rect x="18" y="190" width="18" height="6" rx="2" fill="#fca5a5" />
+                                <rect x="64" y="190" width="18" height="6" rx="2" fill="#fca5a5" />
+                                <rect x="5" y="82" width="10" height="14" rx="3" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+                                <rect x="85" y="82" width="10" height="14" rx="3" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- 標示牌 -->
+                        <div class="sticky top-[25vh] h-max py-4 w-[28px] -mr-[14px] rounded-full bg-slate-800/90 backdrop-blur shadow-[0_4px_12px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border border-slate-600 pointer-events-auto z-30 mt-10">
+                            <span class="text-rose-400 font-black text-sm mb-1">&uarr;</span>
+                            <span class="writing-vertical text-rose-400 font-black text-[11px] tracking-[0.1em] uppercase drop-shadow-md">Exit</span>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </main>
 
@@ -146,6 +181,7 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -175,6 +211,8 @@
     <div id="force-password-modal" class="fixed inset-0 bg-slate-900/60 z-[110] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative border border-white/20">
             <div class="bg-gradient-to-br from-rose-600 to-rose-800 p-8 text-center relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30">
                     <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
@@ -405,27 +443,42 @@
         // ==========================================
         // 🚗 休旅車 (SUV) 視差滾動互動引擎
         // ==========================================
+        // 將視差更新邏輯封裝，讓資料載入後也能呼叫重算
+        window.updateParallax = () => {
+            const scrollArea = document.getElementById('scroll-area');
+            const suvEntrance = document.getElementById('interactive-suv-entrance');
+            const suvExit = document.getElementById('interactive-suv-exit');
+            
+            if (scrollArea) {
+                const maxScrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
+                let scrollPercent = 0;
+                if (maxScrollTop > 0) {
+                    scrollPercent = scrollArea.scrollTop / maxScrollTop;
+                }
+                
+                // 動態取得當下內容高度，計算最大移動距離
+                const contentHeight = scrollArea.scrollHeight;
+                const maxTravel = contentHeight > 200 ? contentHeight - 160 : 0; 
+                
+                if (suvEntrance) {
+                    // 入口車從上往下開 (只修改 translateY，保持 X 軸獨立)
+                    const translateYEntrance = scrollPercent * maxTravel;
+                    suvEntrance.style.transform = `translateY(${translateYEntrance}px)`;
+                }
+                
+                if (suvExit) {
+                    // 出口車從下往上開
+                    const translateYExit = (1 - scrollPercent) * maxTravel;
+                    suvExit.style.transform = `translateY(${translateYExit}px)`;
+                }
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const scrollArea = document.getElementById('scroll-area');
-            const suvCar = document.getElementById('interactive-suv');
-            
-            if (scrollArea && suvCar) {
-                scrollArea.addEventListener('scroll', () => {
-                    // 計算最大可滾動距離
-                    const maxScrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
-                    if (maxScrollTop <= 0) return; // 內容不夠長無法滾動時不動作
-                    
-                    // 計算滾動百分比 (0 到 1)
-                    const scrollPercent = scrollArea.scrollTop / maxScrollTop;
-                    
-                    // 根據內容總長度，計算車子可以移動的最大視覺距離
-                    const contentHeight = scrollArea.scrollHeight;
-                    const maxTravel = contentHeight - 140; // 扣除車身長度安全邊距
-                    
-                    // 應用變換，讓車子在容器內部往下「開」
-                    const translateY = scrollPercent * maxTravel;
-                    suvCar.style.transform = `translateY(${translateY}px)`;
-                });
+            if (scrollArea) {
+                scrollArea.addEventListener('scroll', window.updateParallax);
+                window.addEventListener('resize', window.updateParallax);
             }
         });
 
@@ -524,7 +577,7 @@
                 return;
             }
 
-            // 防卡死計時器：5秒內 LIFF 沒反應就跳轉網頁版
+            // 防卡死計時器
             let initTimer = setTimeout(() => {
                 if (!currentUserLineId) {
                     document.getElementById('header-status-text').innerText = "LINE連線逾時，切換為網頁版";
@@ -768,6 +821,11 @@
                 btn.onclick = () => handleSpotClick(spot);
                 document.getElementById(`zone-${spot.zone}`).appendChild(btn);
             });
+
+            // 確保車道建立完畢後，初始化視差位置
+            if (typeof window.updateParallax === 'function') {
+                setTimeout(window.updateParallax, 100);
+            }
         }
 
         async function handleSpotClick(spot) {
