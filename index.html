@@ -39,7 +39,6 @@
                     <span class="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_5px_rgba(251,113,133,0.8)]" id="status-dot"></span>
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
-                <!-- 個人設定按鈕 -->
                 <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30 relative">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
@@ -61,7 +60,7 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 (預設開啟模糊背景) -->
+        <!-- 停車場主視圖 -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -94,8 +93,8 @@
         </nav>
     </div>
 
-    <!-- 首次登入視窗 (預設直接顯示，沒有 hidden 屬性) -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <!-- 首次登入視窗 -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm hidden fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -135,7 +134,7 @@
                     <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
                 <h2 class="text-xl font-black text-white tracking-wide relative z-10">安全性要求</h2>
-                <p class="text-xs text-rose-100 mt-2 font-medium relative z-10">系統偵測此為首次綁定，請立即變更初始密碼</p>
+                <p class="text-xs text-rose-100 mt-2 font-medium relative z-10">基於安全考量，請立即變更您的初始密碼</p>
             </div>
             <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
@@ -153,7 +152,7 @@
         </div>
     </div>
 
-    <!-- 一般變更密碼視窗 -->
+    <!-- 個人設定視窗 -->
     <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 z-[120] hidden flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative">
             <div class="p-5 bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-base flex justify-between items-center">
@@ -173,7 +172,6 @@
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </button>
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-2 ml-1">※ 變更密碼僅供未來換手機或換 LINE 帳號重新綁定時使用。</p>
                 </div>
                 <button onclick="apiChangePassword()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition-all mt-4 text-sm">儲存新密碼</button>
             </div>
@@ -191,7 +189,7 @@
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
-                <option value="all">全部</option><option value="available">可預約</option><option value="reserved">已被預約</option><option value="fixed">未釋出</option><option value="guest">來賓</option>
+                <option value="all">全部車位</option><option value="assigned">已分配專屬車位</option><option value="unassigned">無專屬車位(空位/來賓)</option>
             </select>
         </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
@@ -212,8 +210,16 @@
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
             <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
-            <button onclick="showHistoryPanel()" class="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold border border-white/20">歷史紀錄</button>
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('csv-upload').click()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">匯入Users</button>
+                <input type="file" id="csv-upload" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+                <button onclick="showHistoryPanel()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">歷史紀錄</button>
+            </div>
         </header>
+        <div class="bg-white p-2 border-b shadow-sm flex justify-between shrink-0 z-10">
+            <span class="text-xs font-extrabold text-slate-600 self-center">車位管理 (今日)</span>
+            <button onclick="openEditModal(null, true)" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">➕ 新增車位</button>
+        </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
@@ -236,7 +242,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <table class="min-w-full text-xs text-left">
                     <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0">
-                        <tr><th class="py-3 px-2">發生時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
+                        <tr><th class="py-3 px-2">時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
                 </table>
@@ -249,20 +255,28 @@
     <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
-                <span>編輯車位資料</span><span id="edit-sys-id" class="bg-rose-900/50 px-2 py-1 rounded text-xs font-mono"></span>
+                <span id="admin-modal-title">編輯車位資料</span>
+                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="text-white hover:text-rose-200">&times;</button>
             </div>
             <div class="p-6 space-y-4 bg-slate-50/50">
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500"></div>
+                <div id="edit-sys-id-container" class="hidden">
+                    <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">系統ID (必填，如: A99)</label>
+                    <input type="text" id="edit-sys-id-input" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase">
+                </div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位顯示編號</label><input type="text" id="edit-display-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase"></div>
                 <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">車位類型</label><select id="edit-spot-type" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-rose-500 font-bold"><option value="employee">員工專屬位</option><option value="guest">來賓保留位</option></select></div>
                 <div id="edit-emp-fields" class="space-y-4 border-t border-slate-200 pt-4 mt-2">
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
-                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設工號</label><input type="text" id="edit-owner-id" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
+                    <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設姓名</label><input type="text" id="edit-owner-name" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-bold shadow-sm"></div>
                 </div>
-                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono"></div>
+                <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
             </div>
-            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
-                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl">取消</button>
-                <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl">儲存變更</button>
+            <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100">
+                <button id="btn-delete-spot" onclick="deleteSpotConfig()" class="px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl hover:bg-rose-100 hidden">刪除</button>
+                <div class="flex justify-end gap-3 w-full">
+                    <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
+                    <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-md shadow-rose-200 transition-colors">儲存</button>
+                </div>
             </div>
         </div>
     </div>
@@ -275,13 +289,13 @@
                 <p id="modal-message" class="text-slate-700 text-sm leading-relaxed font-medium">內容</p>
                 <div id="plate-input-container" class="hidden mt-5 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
                     <label class="block text-xs font-extrabold text-indigo-800 mb-2">請輸入您本次停放的車牌</label>
-                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono" placeholder="如: ABC-1234">
+                    <input type="text" id="modal-plate-input" class="w-full bg-white border border-indigo-200 rounded-xl p-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-mono shadow-sm" placeholder="如: ABC-1234">
                     <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-2 hidden">❌ 請輸入車牌號碼</p>
                 </div>
             </div>
             <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
                 <button id="modal-cancel-btn" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hidden">取消</button>
-                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl">確定</button>
+                <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-colors">確定</button>
             </div>
         </div>
     </div>
@@ -294,7 +308,7 @@
         const LIFF_ID = "2010157193-q1m2pPB0"; 
 
         // 系統變數
-        let currentUserLineId = ""; // 預設為空字串，防止寫死假 ID 導致自動登入
+        let currentUserLineId = ""; 
         let currentUserEmpId = null; 
         let currentUserName = null;
         let currentUserPlate = null;
@@ -327,7 +341,7 @@
         }
 
         // ==========================================
-        // 🔄 網路連線核心
+        // 🔄 網路連線核心 (強制執行真實 API 請求)
         // ==========================================
         async function fetchWithRetry(url, options = {}, retries = 2, delay = 500) {
             try {
@@ -361,11 +375,11 @@
         window.onload = function() {
             const isIframe = window !== window.parent;
             
-            // 預覽視窗防護，避免自動登入，每次都產生隨機 ID 來測試
-            if (isIframe || LIFF_ID.includes("YOUR_LIFF")) {
+            // 預覽視窗防護，確保每次取得隨機 ID，不會卡死或自動登入
+            if (isIframe) {
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
                 document.getElementById('header-status-text').innerText = "預覽連線中...";
-                currentUserLineId = "PREVIEW_" + Math.random().toString(36).substr(2, 9); // 產生隨機 ID，保證未綁定
+                currentUserLineId = "PREV_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
                 fetchCloudData();
                 return;
             }
@@ -418,7 +432,6 @@
                             unlockUI();
                         }
                     } else {
-                        // 未登入綁定狀態：顯示登入框並維持背景模糊
                         document.getElementById('login-modal').classList.remove('hidden');
                         document.getElementById('scroll-area').classList.add('blur-bg');
                     }
@@ -426,14 +439,18 @@
                     throw new Error(res.message);
                 }
             } catch (err) {
-                // 網路錯誤攔截：UI 引導提示
-                document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
                 document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
                 document.getElementById('btn-login-submit').classList.remove('hidden');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-left p-3 rounded-lg shadow-sm border border-rose-200 mt-2"><p class="font-bold text-rose-600 text-xs mb-1">❌ 網路連線被阻擋 (Failed to fetch)</p><p class="text-[11px] text-rose-500 mb-2">請確認您的 Google Apps Script 已經「發布為新版本」且權限設為「所有人」。</p><button onclick="window.open(location.href, '_blank')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-xs transition-colors">🚀 點此跳出預覽環境測試</button></div>`;
+                
+                errorMsg.innerHTML = `
+                    <div class="bg-rose-50 text-left p-3 rounded-lg shadow-sm border border-rose-200 mt-2">
+                        <p class="font-bold text-rose-600 text-xs mb-1">❌ 網路連線被阻擋</p>
+                        <p class="text-[11px] text-rose-500 mb-2">請確認您的 Google Apps Script 已經「發布為新版本」且權限設為「所有人」。</p>
+                        <button onclick="window.open(location.href, '_blank')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-xs transition-colors">🚀 在獨立分頁中開啟測試</button>
+                    </div>`;
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -483,7 +500,7 @@
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 密碼不能為空，且至少需4碼！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
-            if (newPwd === currentOldPwd || newPwd === "1234" || newPwd === "Aa123456") {
+            if (newPwd === currentOldPwd || newPwd === "1234" || newPwd === "Aa123456" || newPwd === "ADMIN1234") {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm">❌ 新密碼不可與預設密碼相同！</div>`;
                 errorMsg.classList.remove('hidden'); return;
             }
@@ -510,7 +527,7 @@
             const res = await apiRequest("changePassword", { newPassword: newPwd });
             if (res.success) {
                 document.getElementById('settings-modal').classList.add('hidden');
-                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次重新綁定裝置時請使用新密碼。</span>', 'success', null, '關閉');
+                showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次登入時請使用新密碼。</span>', 'success', null, '關閉');
             } else {
                 showModal('錯誤', res.message, 'error');
             }
@@ -535,13 +552,11 @@
                 let shapeClass = (spot.zone === 'A') ? 'rounded-l-none border-l-0' : 'rounded-r-none border-r-0';
                 let colorClass = '';
 
-                // 決定要顯示的車號
                 let displayPlate = '';
                 if (spot.status === 'fixed' || spot.status === 'guest') displayPlate = spot.ownerPlate;
                 else if (spot.status === 'reserved' || spot.status === 'mine') displayPlate = spot.reserverPlate || spot.myPlate;
                 else if (spot.status === 'available') displayPlate = '空位';
 
-                // 在車格按鈕內同時顯示車位編號與車號
                 let contentHTML = `
                     <div class="flex flex-col items-center justify-center leading-tight">
                         <span class="font-extrabold tracking-tighter text-[11px]">${spot.displayId || spot.id}</span>
@@ -577,7 +592,6 @@
             const sysId = spot.sysId || spot.id;
             const displayId = spot.displayId || spot.id;
 
-            // 管理員巡視
             if (isAdmin) {
                 let statusText = '', detailsHtml = '';
                 let t_rel = spot.releaseTime ? `<p class="text-emerald-600 text-[10px] mt-1.5 font-bold">🕒 釋出: ${spot.releaseTime}</p>` : '';
@@ -585,27 +599,26 @@
 
                 if (spot.status === 'guest') {
                     statusText = '<span class="text-purple-600 font-black">來賓保留位</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b></p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>管理單位：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>預設車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'fixed') {
-                    statusText = '<span class="text-slate-500 font-black">未釋出 (專屬保留)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>目前使用人：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>停放車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
+                    statusText = '<span class="text-slate-500 font-black">未釋出 (原車主專屬)</span>';
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>持有同仁：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>登記車號：<b class="text-slate-800 font-mono">${spot.ownerPlate}</b></p></div>`;
                 } else if (spot.status === 'available') {
                     statusText = '<span class="text-emerald-600 font-black">已釋出 (空位)</span>';
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b></p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p>原車主：<b class="text-slate-800">${spot.ownerName}</b> (${spot.ownerId})</p><p>狀態：<b class="text-emerald-600">目前無人預約</b></p>${t_rel}</div>`;
                 } else if (spot.status === 'reserved' || spot.status === 'mine') {
                     statusText = '<span class="text-indigo-600 font-black">已被預約</span>';
                     let actualPlate = spot.reserverPlate || spot.myPlate;
                     let actualReserverId = spot.reserverId;
                     let actualReserverName = spot.reserverName;
-                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原車主：${spot.ownerName}</p><div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (${actualReserverId})</p><p>車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
+                    detailsHtml = `<div class="mt-3 text-sm text-slate-600 space-y-1.5"><p class="text-xs text-slate-400 font-bold">原車主：${spot.ownerName} (${spot.ownerId})</p><div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-100 shadow-sm"><p class="text-[10px] text-indigo-400 font-black mb-2 uppercase tracking-wide">目前使用人</p><p class="mb-1">姓名：<b class="text-indigo-900">${actualReserverName}</b> (${actualReserverId})</p><p>車號：<b class="text-indigo-700 text-base font-mono">${actualPlate}</b></p>${t_res}</div></div>`;
                 }
                 showModal(`車位巡查 [${isToday?'今日':'明日'}] - ${displayId}`, `<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded font-mono">SysID: ${sysId}</span><br><br>狀態：${statusText}<br>${detailsHtml}`, 'info', null, '關閉視窗');
                 return; 
             }
 
-            // 一般員工邏輯
             if (spot.status === 'guest') {
-                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
+                showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>管理單位：<b>${spot.ownerName}</b> (${spot.ownerId})<br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
             } 
             else if (spot.status === 'fixed') {
                 if (spot.ownerId === currentUserEmpId) {
@@ -620,7 +633,7 @@
                             }, '確定釋出', '保留自用');
                     }
                 } else {
-                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>目前使用人：<b>${spot.ownerName}</b><br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁今日正常上班，尚未釋出此車位。</span>`, 'error', null, '我知道了');
+                    showModal('車位資訊', `車位 <b>${displayId}</b> 目前為專屬保留。<br><br>原車主：<b>${spot.ownerName}</b> (${spot.ownerId})<br>停放車號：<b class="text-gray-800 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-rose-600 font-bold">⚠️ 該同仁尚未釋出此車位。</span>`, 'error', null, '我知道了');
                 }
             } 
             else if (spot.status === 'available') {
@@ -661,7 +674,7 @@
                 }, '確定取消', '保留車位');
             } 
             else if (spot.status === 'reserved') {
-                showModal('已被預約', `車位 <b>${displayId}</b> 已被其他同仁預約。<br><br>目前使用人：<b>${spot.reserverName}</b><br>停放車號：<b class="text-rose-600 font-mono">${spot.reserverPlate}</b><br><br><span class="text-xs text-gray-500">請尋找其他綠色空位。</span>`, 'error', null, '關閉');
+                showModal('已被預約', `車位 <b>${displayId}</b> 已被預約。<br><br>目前使用人：<b>${spot.reserverName}</b> (${spot.reserverId})<br>停放車號：<b class="text-rose-600 font-mono">${spot.reserverPlate}</b><br><br><span class="text-xs text-gray-500">請尋找其他綠色空位。</span>`, 'error', null, '關閉');
             }
         }
 
@@ -702,11 +715,10 @@
             const filteredData = (db[activeDateTab] || []).filter(spot => {
                 const isMine = spot.status === 'mine' || (spot.status === 'reserved' && spot.reserverId === currentUserEmpId);
                 const isReserved = spot.status === 'reserved' || spot.status === 'mine' || isMine;
+                
                 if (filterValue === 'all') return true;
-                if (filterValue === 'available') return spot.status === 'available';
-                if (filterValue === 'reserved') return isReserved;
-                if (filterValue === 'fixed') return spot.status === 'fixed';
-                if (filterValue === 'guest') return spot.status === 'guest';
+                if (filterValue === 'assigned') return spot.ownerId !== 'GUEST';
+                if (filterValue === 'unassigned') return spot.ownerId === 'GUEST' || spot.status === 'available';
                 return true;
             });
 
@@ -737,10 +749,8 @@
                 const isMine = spot.status === 'mine' || (spot.status === 'reserved' && spot.reserverId === currentUserEmpId);
                 const isReserved = spot.status === 'reserved' || spot.status === 'mine' || isMine;
                 if (filterValue === 'all') return true;
-                if (filterValue === 'available') return spot.status === 'available';
-                if (filterValue === 'reserved') return isReserved;
-                if (filterValue === 'fixed') return spot.status === 'fixed';
-                if (filterValue === 'guest') return spot.status === 'guest';
+                if (filterValue === 'assigned') return spot.ownerId !== 'GUEST';
+                if (filterValue === 'unassigned') return spot.ownerId === 'GUEST' || spot.status === 'available';
                 return true;
             });
 
@@ -749,7 +759,9 @@
                 const isReserved = spot.status === 'reserved' || isMine;
                 let statusText = spot.status === 'available' ? '已釋出(空位)' : spot.status === 'fixed' ? '未釋出(專屬)' : isReserved ? '已被預約' : '來賓保留';
                 let actualPlate = (spot.status === 'fixed' || spot.status === 'guest') ? spot.ownerPlate : (isReserved ? (spot.reserverPlate || spot.myPlate) : '');
-                csvContent += `${spot.displayId || spot.id},${statusText},${spot.ownerName},${spot.ownerId},${spot.reserverName||''},${spot.reserverId||''},${actualPlate}\n`;
+                let resName = spot.reserverName || '';
+                let resId = spot.reserverId || '';
+                csvContent += `${spot.displayId || spot.id},${statusText},${spot.ownerName},${spot.ownerId},${resName},${resId},${actualPlate}\n`;
             });
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csvContent));
@@ -761,6 +773,8 @@
         // 總務管理後台 
         // ==========================================
         let editingSpotId = null;
+        let isAddingSpot = false;
+
         function showAdminPanel() {
             if (!isAdmin) return;
             switchMainTab();
@@ -768,29 +782,54 @@
             tbody.innerHTML = ''; 
             (db.today || []).forEach(spot => {
                 const isGuest = spot.ownerId === 'GUEST';
-                tbody.innerHTML += `<tr><td class="py-3 px-2 text-center font-black text-rose-700 border-b border-slate-100">${spot.displayId || spot.id}</td><td class="py-3 px-2 text-slate-500 font-mono text-[10px] border-b border-slate-100">${isGuest?'-':spot.ownerId}</td><td class="py-3 px-2 font-bold text-slate-700 border-b border-slate-100">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-3 px-2 text-slate-500 font-mono text-xs border-b border-slate-100">${spot.ownerPlate}</td><td class="py-3 px-2 text-center border-b border-slate-100"><button onclick="openEditModal('${spot.sysId || spot.id}')" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-[10px] font-black border border-rose-200 hover:bg-rose-100 transition-colors">編輯</button></td></tr>`;
+                tbody.innerHTML += `<tr><td class="py-3 px-2 text-center font-black text-rose-700 border-b border-slate-100">${spot.displayId || spot.id}</td><td class="py-3 px-2 text-slate-500 font-mono text-[10px] border-b border-slate-100">${isGuest?'-':spot.ownerId}</td><td class="py-3 px-2 font-bold text-slate-700 border-b border-slate-100">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-3 px-2 text-slate-500 font-mono text-xs border-b border-slate-100">${spot.ownerPlate}</td><td class="py-3 px-2 text-center border-b border-slate-100"><button onclick="openEditModal('${spot.sysId || spot.id}', false)" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-[10px] font-black border border-rose-200 hover:bg-rose-100 transition-colors">編輯</button></td></tr>`;
             });
             document.getElementById('admin-modal').classList.remove('hidden');
         }
 
-        function openEditModal(sysId) {
+        function openEditModal(sysId, isAdd = false) {
+            isAddingSpot = isAdd;
             editingSpotId = sysId;
-            const spot = db.today.find(s => s.sysId === sysId || s.id === sysId);
-            document.getElementById('edit-sys-id').innerText = "SysID: " + sysId;
-            document.getElementById('edit-display-id').value = spot.displayId || spot.id;
-            
+            const titleEl = document.getElementById('admin-modal-title');
+            const sysIdInputCtn = document.getElementById('edit-sys-id-container');
             const typeSelect = document.getElementById('edit-spot-type');
             const empFields = document.getElementById('edit-emp-fields');
-            
-            if (spot.ownerId === 'GUEST') { typeSelect.value = 'guest'; empFields.classList.add('hidden'); } 
-            else { typeSelect.value = 'employee'; empFields.classList.remove('hidden'); document.getElementById('edit-owner-id').value = spot.ownerId; document.getElementById('edit-owner-name').value = spot.ownerName; }
-            document.getElementById('edit-owner-plate').value = spot.ownerPlate;
+            const btnDelete = document.getElementById('btn-delete-spot');
+
+            if (isAdd) {
+                titleEl.innerText = "新增車位";
+                sysIdInputCtn.classList.remove('hidden');
+                document.getElementById('edit-sys-id-input').value = "";
+                document.getElementById('edit-display-id').value = "";
+                typeSelect.value = 'employee';
+                empFields.classList.remove('hidden');
+                document.getElementById('edit-owner-id').value = "";
+                document.getElementById('edit-owner-name').value = "";
+                document.getElementById('edit-owner-plate').value = "";
+                btnDelete.classList.add('hidden');
+            } else {
+                titleEl.innerText = `編輯車位 (SysID: ${sysId})`;
+                sysIdInputCtn.classList.add('hidden');
+                const spot = db.today.find(s => s.sysId === sysId || s.id === sysId);
+                document.getElementById('edit-display-id').value = spot.displayId || spot.id;
+                
+                if (spot.ownerId === 'GUEST') { typeSelect.value = 'guest'; empFields.classList.add('hidden'); } 
+                else { typeSelect.value = 'employee'; empFields.classList.remove('hidden'); document.getElementById('edit-owner-id').value = spot.ownerId; document.getElementById('edit-owner-name').value = spot.ownerName; }
+                document.getElementById('edit-owner-plate').value = spot.ownerPlate;
+                btnDelete.classList.remove('hidden');
+            }
 
             typeSelect.onchange = (e) => { if(e.target.value === 'guest') empFields.classList.add('hidden'); else empFields.classList.remove('hidden'); };
             document.getElementById('admin-edit-modal').classList.remove('hidden');
         }
 
         async function saveSpotConfig() {
+            let finalSysId = editingSpotId;
+            if (isAddingSpot) {
+                finalSysId = document.getElementById('edit-sys-id-input').value.trim().toUpperCase();
+                if (!finalSysId) { showModal('錯誤', '請填寫系統ID！', 'error'); return; }
+            }
+
             const displayId = document.getElementById('edit-display-id').value.trim();
             const type = document.getElementById('edit-spot-type').value;
             const plate = document.getElementById('edit-owner-plate').value.trim().toUpperCase();
@@ -803,12 +842,58 @@
                 if (!ownerId || !ownerName) { showModal('錯誤', '請填寫工號與姓名！', 'error'); return; }
             }
 
-            const res = await apiRequest("adminUpdate", { spotId: editingSpotId, displayId: displayId, type: type, ownerId: ownerId, ownerName: ownerName, ownerPlate: plate });
+            const action = isAddingSpot ? "adminAddSpot" : "adminUpdateSpot";
+            const res = await apiRequest(action, { spotId: finalSysId, displayId: displayId, type: type, ownerId: ownerId, ownerName: ownerName, ownerPlate: plate });
+            
             if (res.success) {
                 document.getElementById('admin-edit-modal').classList.add('hidden');
                 await fetchCloudData(); 
                 showAdminPanel();
             } else { showModal('儲存失敗', res.message, 'error'); }
+        }
+
+        async function deleteSpotConfig() {
+            showModal("刪除車位", `確定要永久刪除車位 <b>${editingSpotId}</b> 嗎？`, "error", async () => {
+                const res = await apiRequest("adminDeleteSpot", { spotId: editingSpotId });
+                if (res.success) {
+                    document.getElementById('admin-edit-modal').classList.add('hidden');
+                    await fetchCloudData();
+                    showAdminPanel();
+                } else {
+                    showModal('刪除失敗', res.message, 'error');
+                }
+            }, "確定刪除", "取消");
+        }
+
+        // CSV 匯入處理
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n').map(r => r.split(','));
+                let users = [];
+                for(let i=1; i<rows.length; i++) { 
+                    if(rows[i].length >= 3 && rows[i][0].trim()) {
+                        users.push({
+                            empId: rows[i][0].trim(),
+                            pwd: rows[i][1] ? rows[i][1].trim() : "Aa123456",
+                            name: rows[i][2].trim(),
+                            plate: rows[i][4] ? rows[i][4].trim() : ''
+                        });
+                    }
+                }
+                if(users.length === 0) { showModal('錯誤', '無效的 CSV 格式', 'error'); return; }
+                
+                showModal('匯入中', '正在將同仁資料同步至雲端...', 'info');
+                const res = await apiRequest('adminImportUsers', { users: users });
+                
+                if(res.success) showModal('匯入成功', `成功匯入/更新 ${users.length} 筆同仁資料。`, 'success');
+                else showModal('匯入失敗', res.message, 'error');
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // reset
         }
 
         async function showHistoryPanel() {
@@ -861,6 +946,7 @@
         function hideModal() { modal.classList.add('hidden'); currentConfirmAction = null; }
         confirmBtn.onclick = () => { if (currentConfirmAction) { if (currentConfirmAction() !== false) hideModal(); } else { hideModal(); } };
         cancelBtn.onclick = hideModal;
+
     </script>
 </body>
 </html>
