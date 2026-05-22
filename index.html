@@ -23,7 +23,6 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex justify-center selection:bg-indigo-100">
 
-    <!-- 主程式框架 -->
     <div class="w-full max-w-md bg-white shadow-2xl min-h-screen relative overflow-hidden flex flex-col">
         <!-- 頂部導航列 -->
         <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center relative shrink-0">
@@ -61,8 +60,8 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 -->
-        <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
+        <!-- 停車場主視圖 (預設開啟模糊背景) -->
+        <main class="flex-1 min-h-0 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
                 <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">Entrance &darr;</div></div>
@@ -99,7 +98,6 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-white/30 transform rotate-3">
                     <svg class="h-8 w-8 text-white transform -rotate-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" /></svg>
                 </div>
@@ -198,16 +196,24 @@
                 <option value="reserved_now">已被預約</option>
             </select>
         </div>
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 sticky top-0">
-                        <tr><th class="py-3.5 px-2 text-center">車位</th><th class="py-3.5 px-2">狀態</th><th class="py-3.5 px-2">持有者</th><th class="py-3.5 px-2">預約者</th><th class="py-3.5 px-2">實際車號</th></tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50" id="report-tbody"></tbody>
-                </table>
+        <div class="flex-1 min-h-0 p-3 flex flex-col">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex-1 flex flex-col min-h-0">
+                <div class="overflow-y-auto overflow-x-auto no-scrollbar flex-1 w-full">
+                    <table class="min-w-full text-xs text-left">
+                        <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-3.5 px-2 font-bold w-[12%] text-center">車位</th>
+                                <th class="py-3.5 px-2 font-bold w-[18%] whitespace-nowrap">狀態</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">持有者</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">預約者</th>
+                                <th class="py-3.5 px-2 font-bold w-[20%] whitespace-nowrap">實際車號</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50" id="report-tbody"></tbody>
+                    </table>
+                </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-5 mb-6">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-3 mb-1 shrink-0">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
         </div>
     </div>
 
@@ -229,14 +235,22 @@
                 <button onclick="openEditModal(null, true)" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">➕ 新增</button>
             </div>
         </div>
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="min-w-full text-xs text-left">
-                    <thead class="bg-rose-50/50 text-rose-900 border-b border-rose-100 sticky top-0">
-                        <tr><th class="py-3.5 px-2 text-center">車位</th><th class="py-3.5 px-2">工號</th><th class="py-3.5 px-2">姓名</th><th class="py-3.5 px-2">車號</th><th class="py-3.5 px-2 text-center">操作</th></tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50" id="admin-tbody"></tbody>
-                </table>
+        <div class="flex-1 min-h-0 p-3 flex flex-col">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex-1 flex flex-col min-h-0">
+                <div class="overflow-y-auto overflow-x-auto no-scrollbar flex-1 w-full">
+                    <table class="min-w-full text-xs text-left">
+                        <thead class="bg-rose-50/50 text-rose-900 border-b border-rose-100 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th class="py-3.5 px-2 font-bold w-[15%] text-center">車位</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">工號</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">姓名</th>
+                                <th class="py-3.5 px-2 font-bold w-[20%] whitespace-nowrap">車號</th>
+                                <th class="py-3.5 px-2 font-bold w-[15%] text-center whitespace-nowrap">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50" id="admin-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -269,27 +283,29 @@
                 </div>
             </div>
         </div>
-        <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <table class="min-w-full text-xs text-left">
-                    <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 shadow-sm">
-                        <tr><th class="py-3 px-2">發生時間</th><th class="py-3 px-2">目標</th><th class="py-3 px-2">動作</th><th class="py-3 px-2">操作者</th></tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
-                </table>
+        <div class="flex-1 min-h-0 p-3 flex flex-col">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex-1 flex flex-col min-h-0">
+                <div class="overflow-y-auto overflow-x-auto no-scrollbar flex-1 w-full">
+                    <table class="min-w-full text-xs text-left">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
+                            <tr><th class="py-3 px-2 font-bold whitespace-nowrap">發生時間</th><th class="py-3 px-2 font-bold whitespace-nowrap">目標</th><th class="py-3 px-2 font-bold whitespace-nowrap">動作</th><th class="py-3 px-2 font-bold whitespace-nowrap">操作者</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
+                    </table>
+                </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-6">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-3 mb-1 shrink-0">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
     <!-- 後台編輯視窗 -->
     <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center shrink-0">
                 <span id="admin-modal-title">編輯車位資料</span>
                 <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="text-white hover:text-rose-200">&times;</button>
             </div>
-            <div class="p-6 space-y-4 bg-slate-50/50">
+            <div class="p-6 space-y-4 bg-slate-50/50 overflow-y-auto max-h-[60vh] no-scrollbar">
                 <div id="edit-sys-id-container" class="hidden">
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">系統ID (必填，如: A99)</label>
                     <input type="text" id="edit-sys-id-input" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-black text-indigo-700 outline-none focus:ring-2 focus:ring-rose-500 shadow-sm uppercase">
@@ -302,7 +318,7 @@
                 </div>
                 <div><label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">預設車號</label><input type="text" id="edit-owner-plate" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm uppercase font-mono shadow-sm"></div>
             </div>
-            <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100">
+            <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100 shrink-0">
                 <button id="btn-delete-spot" onclick="deleteSpotConfig()" class="px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl hover:bg-rose-100 hidden">刪除</button>
                 <div class="flex justify-end gap-3 w-full">
                     <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
@@ -314,9 +330,9 @@
 
     <!-- 共用 Alert Modal -->
     <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 z-[130] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div id="modal-header" class="p-5 text-white font-black text-base tracking-wide">提示</div>
-            <div class="p-7 bg-slate-50/50">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div id="modal-header" class="p-5 text-white font-black text-base tracking-wide shrink-0">提示</div>
+            <div class="p-7 bg-slate-50/50 overflow-y-auto no-scrollbar max-h-[60vh]">
                 <p id="modal-message" class="text-slate-700 text-sm leading-relaxed font-medium">內容</p>
                 <div id="plate-input-container" class="hidden mt-5 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
                     <label class="block text-xs font-extrabold text-indigo-800 mb-2">請輸入您本次停放的車牌</label>
@@ -324,7 +340,7 @@
                     <p id="modal-plate-error" class="text-rose-500 text-xs font-bold mt-2 hidden">❌ 請輸入車牌號碼</p>
                 </div>
             </div>
-            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100">
+            <div class="p-4 bg-white flex justify-end gap-3 rounded-b-3xl border-t border-slate-100 shrink-0">
                 <button id="modal-cancel-btn" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hidden">取消</button>
                 <button id="modal-confirm-btn" class="px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-colors">確定</button>
             </div>
@@ -414,53 +430,31 @@
         }
 
         // ==========================================
-        // 📱 啟動與登入機制 (修復 LIFF 強制登入)
+        // 📱 啟動與登入機制
         // ==========================================
         window.onload = function() {
-            // 預覽視窗防護，避免 Canvas preview 產生無限跳轉
-            const isCanvasPreview = (window !== window.top) || window.location.hostname.includes("goog") || window.location.hostname.includes("usercontent");
+            const isLocalBrowser = !LIFF_ID || LIFF_ID.includes("YOUR_LIFF") || window.location.hostname.includes("github.io") || window.location.hostname.includes("localhost") || window.location.hostname.includes("goog");
 
-            if (isCanvasPreview || LIFF_ID.includes("YOUR_LIFF")) {
-                console.log("預覽模式：已略過 LIFF 跳轉");
+            if (isLocalBrowser || window !== window.parent) {
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
-                document.getElementById('header-status-text').innerText = "預覽環境連線中...";
-                currentUserLineId = "PREV_" + Math.random().toString(36).substr(2, 9);
+                document.getElementById('header-status-text').innerText = "網頁模式...";
+                currentUserLineId = getLocalSimId();
                 fetchCloudData();
                 return;
             }
 
-            document.getElementById('header-status-text').innerText = "LINE 授權載入中...";
-            
-            // 延長逾時時間，若 LIFF 卡死，至少給予本機 ID
-            let initTimer = setTimeout(() => {
-                if (!currentUserLineId) {
-                    document.getElementById('header-status-text').innerText = "LINE連線逾時，切換為網頁版";
-                    currentUserLineId = getLocalSimId();
-                    fetchCloudData();
-                }
-            }, 5000); 
-
             liff.init({ liffId: LIFF_ID }).then(() => {
-                clearTimeout(initTimer);
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
-                        document.getElementById('header-status-text').innerText = "資料同步中...";
+                        document.getElementById('user-display').innerText = "連線中...";
                         fetchCloudData(); 
-                    }).catch(err => {
-                        currentUserLineId = getLocalSimId();
-                        fetchCloudData(); 
-                    }); 
+                    }).catch(() => fetchCloudData()); 
                 } else {
-                    // 【關鍵修正】如果使用者還沒登入 LINE，一律強制呼叫 liff.login() 跳轉登入！
-                    // 這樣就算從官方帳號選單點的是 Github 直接網址，也會被強制帶入 LINE 授權流程，保證能抓到 LINE ID。
-                    document.getElementById('header-status-text').innerText = "跳轉 LINE 登入中...";
-                    liff.login({ redirectUri: window.location.href });
+                    liff.login();
                 }
             }).catch(err => { 
-                clearTimeout(initTimer);
                 document.getElementById('user-display').innerText = "LIFF 錯誤"; 
-                currentUserLineId = getLocalSimId();
                 fetchCloudData(); 
             });
         };
@@ -503,12 +497,10 @@
                         if (res.user.requirePasswordChange && !isAdmin && !isViewer) {
                             document.getElementById('login-modal').classList.add('hidden');
                             document.getElementById('force-password-modal').classList.remove('hidden');
-                            document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI();
                         }
                     } else {
-                        // 如果系統「已經在登入狀態 (記憶體有值)」，即使後端因為沒綁定而回傳 null，前端也不該將他踢出。
                         if (!currentUserEmpId) {
                             document.getElementById('header-status-text').innerText = "請先登入";
                             document.getElementById('login-modal').classList.remove('hidden');
@@ -523,10 +515,9 @@
             } catch (err) {
                 document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
-                document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態或重試。</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態。</div>`;
                 errorMsg.classList.remove('hidden');
             } finally {
                 isFetchingData = false;
@@ -564,7 +555,6 @@
                     unlockUI();
                 }
                 
-                // 登入成功後只需更新地圖資料即可，不需要把整個 User 再驗證一次 (防止 ADMIN 被洗掉)
                 await fetchCloudData(); 
             } else {
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ ${res.message}</div>`;
