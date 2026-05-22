@@ -54,12 +54,12 @@
         <div class="bg-slate-50/80 p-2.5 border-b border-gray-200 z-20 flex flex-wrap justify-center gap-x-3.5 gap-y-1.5 text-[10px] font-bold shrink-0">
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300 shadow-sm block"></span><span class="text-gray-500">未釋出</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">專屬位</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">已被預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">我的預約</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
         </div>
 
-        <!-- 停車場主視圖 (預設模糊) -->
+        <!-- 停車場主視圖 (預設開啟模糊背景) -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
             <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
@@ -79,7 +79,7 @@
             </button>
             <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showMyReservation()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                <span class="text-[10px] font-extrabold tracking-wide">我的紀錄</span>
+                <span class="text-[10px] font-extrabold tracking-wide">我的預約</span>
             </button>
             <button class="flex-1 flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors" onclick="showDailyReport()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -93,7 +93,7 @@
     </div>
 
     <!-- 首次登入視窗 -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm hidden fade-in">
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -105,7 +105,7 @@
             <div class="p-7 space-y-5 bg-slate-50/50">
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">員工工號 (Emp ID)</label>
-                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="請輸入工號 (或 VIEWER)">
+                    <input type="text" id="login-emp-id" class="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none uppercase font-mono shadow-sm" placeholder="請輸入工號">
                 </div>
                 <div>
                     <label class="block text-xs font-extrabold text-slate-600 mb-1.5 ml-1">密碼</label>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div id="login-error-msg" class="hidden mt-2"></div>
-                <button onclick="handleLogin()" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm tracking-wide">登入系統</button>
+                <button onclick="handleLogin()" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm tracking-wide">驗證並登入</button>
             </div>
         </div>
     </div>
@@ -188,11 +188,7 @@
         <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
-                <option value="all">全部車位</option>
-                <option value="employee_fixed">員工專屬位</option>
-                <option value="guest_only">來賓保留位</option>
-                <option value="available_now">目前空位(可預約)</option>
-                <option value="reserved_now">已被預約</option>
+                <option value="all">全部</option><option value="available">可預約</option><option value="reserved">已被預約</option><option value="fixed">未釋出</option><option value="guest">來賓</option>
             </select>
         </div>
         <div class="flex-1 overflow-y-auto p-3 no-scrollbar">
@@ -336,12 +332,12 @@
         const LIFF_ID = "2010157193-q1m2pPB0"; 
 
         // 系統變數
-        let currentUserLineId = ""; // 預設為空，確保在非 LINE 環境時不會覆蓋掉已綁定的帳號
+        let currentUserLineId = ""; 
         let currentUserEmpId = null; 
         let currentUserName = null;
         let currentUserPlate = null;
         let isAdmin = false; 
-        let isViewer = false; // 查詢專用帳號
+        let isViewer = false; 
         let isFetchingData = false; 
         
         let activeDateTab = 'today'; 
@@ -404,31 +400,44 @@
         // 📱 啟動與登入機制
         // ==========================================
         window.onload = function() {
-            const isLocalBrowser = !LIFF_ID || LIFF_ID.includes("YOUR_LIFF") || window.location.hostname.includes("github.io") || window.location.hostname.includes("localhost") || window.location.hostname.includes("goog");
+            // 預覽視窗防護，避免 Canvas preview 產生無限跳轉
+            const isCanvasPreview = window.location.hostname.includes("goog") || window.location.hostname.includes("usercontent");
 
-            // 如果在電腦網頁開啟 (或預覽環境)，自動使用隨機碼模擬 LINE ID 以免自動登入，並確保登入窗彈出
-            if (isLocalBrowser || window !== window.parent) {
+            if (isCanvasPreview || LIFF_ID.includes("YOUR_LIFF")) {
                 document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-amber-400');
-                document.getElementById('header-status-text').innerText = "網頁模式...";
-                // 使用隨機字串確保每次整理網頁都需要手動輸入密碼，方便測試
-                currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
+                document.getElementById('header-status-text').innerText = "預覽環境連線中...";
+                currentUserLineId = "PREV_" + Math.random().toString(36).substr(2, 9);
                 fetchCloudData();
                 return;
             }
 
-            // 在真實 LINE 中，LIFF 初始化
+            document.getElementById('header-status-text').innerText = "LINE 授權載入中...";
+            
             liff.init({ liffId: LIFF_ID }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(profile => {
                         currentUserLineId = profile.userId;
-                        document.getElementById('user-display').innerText = "連線中...";
+                        document.getElementById('header-status-text').innerText = "資料同步中...";
                         fetchCloudData(); 
-                    }).catch(() => fetchCloudData()); 
+                    }).catch(err => {
+                        // 獲取 Profile 失敗，配發一般網頁版 ID，走手動帳密登入
+                        currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
+                        fetchCloudData(); 
+                    }); 
                 } else {
-                    liff.login();
+                    // 如果在 LINE APP 中但沒登入 (極少見狀況) -> 要求登入
+                    if (liff.isInClient()) {
+                        liff.login();
+                    } else {
+                        // 在外部電腦瀏覽器 (如 PC 的 Github Pages) 中開啟，不強制跳轉 LINE 登入，改走手動輸入帳密！
+                        document.getElementById('header-status-text').innerText = "網頁版連線中...";
+                        currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
+                        fetchCloudData();
+                    }
                 }
             }).catch(err => { 
-                document.getElementById('user-display').innerText = "LIFF 錯誤"; 
+                // LIFF 初始化失敗 (例如被阻擋)，直接降級為網頁手動登入模式
+                currentUserLineId = "WEB_" + Math.random().toString(36).substr(2, 9);
                 fetchCloudData(); 
             });
         };
@@ -442,7 +451,6 @@
             document.getElementById('status-dot').style.boxShadow = '0 0 5px rgba(52,211,153,0.8)';
             document.getElementById('user-display').innerText = `${currentUserName} (${currentUserEmpId})`;
             
-            // 權限分配
             if (isViewer) {
                 document.getElementById('btn-settings').classList.add('hidden');
                 document.getElementById('nav-admin-btn').classList.add('hidden');
@@ -472,13 +480,14 @@
                         if (res.user.requirePasswordChange && !isAdmin && !isViewer) {
                             document.getElementById('login-modal').classList.add('hidden');
                             document.getElementById('force-password-modal').classList.remove('hidden');
+                            document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI();
                         }
                     } else {
-                        // 未綁定過，顯示登入視窗
                         document.getElementById('header-status-text').innerText = "請先登入";
                         document.getElementById('login-modal').classList.remove('hidden');
+                        document.getElementById('scroll-area').classList.add('blur-bg');
                     }
                 } else {
                     throw new Error(res.message);
@@ -486,9 +495,10 @@
             } catch (err) {
                 document.getElementById('header-status-text').innerText = "連線失敗";
                 document.getElementById('login-modal').classList.remove('hidden');
+                document.getElementById('scroll-area').classList.add('blur-bg');
                 
                 const errorMsg = document.getElementById('login-error-msg');
-                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查 GAS 部署設定。</div>`;
+                errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態或重試。</div>`;
                 errorMsg.classList.remove('hidden');
             } finally {
                 isFetchingData = false;
@@ -594,13 +604,11 @@
                 let shapeClass = (spot.zone === 'A') ? 'rounded-l-none border-l-0' : 'rounded-r-none border-r-0';
                 let colorClass = '';
 
-                // 決定要顯示的車號
                 let displayPlate = '';
                 if (spot.status === 'fixed' || spot.status === 'guest') displayPlate = spot.ownerPlate;
                 else if (spot.status === 'reserved' || spot.status === 'mine') displayPlate = spot.reserverPlate || spot.myPlate;
                 else if (spot.status === 'available') displayPlate = '空位';
 
-                // 在車格按鈕內同時顯示車位編號與車號 (增加高度)
                 let contentHTML = `
                     <div class="flex flex-col items-center justify-center leading-none w-full">
                         <span class="font-extrabold tracking-tighter text-[11px]">${spot.displayId || spot.id}</span>
@@ -636,7 +644,6 @@
             const sysId = spot.sysId || spot.id;
             const displayId = spot.displayId || spot.id;
 
-            // 管理員 & VIEWER(查詢專用帳號) 巡視
             if (isAdmin || isViewer) {
                 let statusText = '', detailsHtml = '';
                 let t_rel = spot.releaseTime ? `<p class="text-emerald-600 text-[10px] mt-1.5 font-bold">🕒 釋出: ${spot.releaseTime}</p>` : '';
@@ -662,7 +669,6 @@
                 return; 
             }
 
-            // 一般員工邏輯
             if (spot.status === 'guest') {
                 showModal('車位資訊', `車位 <b>${displayId}</b> 為來賓保留位。<br><br>管理單位：<b>${spot.ownerName}</b> (工號: ${spot.ownerId})<br>停放車號：<b class="text-purple-700 font-mono">${spot.ownerPlate}</b><br><br><span class="text-xs text-gray-500">此車位不開放內部同仁預約。</span>`, 'warning', null, '我知道了');
             } 
@@ -797,7 +803,6 @@
             const dataToExport = (db[activeDateTab] || []).filter(spot => {
                 const isMine = spot.status === 'mine' || (spot.status === 'reserved' && spot.reserverId === currentUserEmpId);
                 const isReserved = spot.status === 'reserved' || spot.status === 'mine' || isMine;
-                
                 if (filterValue === 'all') return true;
                 if (filterValue === 'employee_fixed') return spot.ownerId !== 'GUEST';
                 if (filterValue === 'guest_only') return spot.ownerId === 'GUEST';
