@@ -21,11 +21,12 @@
         button:active { transform: scale(0.96); }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased h-[100dvh] w-full flex justify-center overflow-hidden selection:bg-indigo-100">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen w-full flex justify-center selection:bg-indigo-100">
 
-    <div class="w-full max-w-md bg-white shadow-2xl h-full relative flex flex-col">
+    <!-- 首頁主程式框架 -->
+    <div class="w-full max-w-md bg-white shadow-2xl min-h-screen flex flex-col relative">
         <!-- 頂部導航列 -->
-        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center shrink-0 relative">
+        <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white p-4 pb-3 shadow-lg z-20 flex justify-between items-center shrink-0">
             <div>
                 <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200 drop-shadow-sm">TCI停車位管理系統</h1>
                 <p class="text-[10px] text-indigo-200 mt-1 flex items-center gap-1.5 font-medium">
@@ -39,14 +40,14 @@
                     <span class="text-xs font-bold tracking-wider" id="user-display">未連線</span>
                 </div>
                 <!-- 個人設定按鈕 -->
-                <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30 relative">
+                <button onclick="showSettingsPanel()" id="btn-settings" class="text-indigo-200 hover:text-white hidden p-1 z-30">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
             </div>
         </header>
 
         <!-- 日期切換頁籤 -->
-        <div class="bg-white flex w-full border-b border-gray-100 shrink-0 z-20 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <div class="bg-white flex w-full border-b border-gray-100 shrink-0 z-20 shadow-sm">
             <button id="tab-today" class="flex-1 py-3.5 text-sm tab-active transition-colors hover:bg-slate-50" onclick="switchDateTab('today')">今日 (<span id="date-today-str"></span>)</button>
             <button id="tab-tomorrow" class="flex-1 py-3.5 text-sm tab-inactive transition-colors hover:bg-slate-50" onclick="switchDateTab('tomorrow')">明日 (<span id="date-tomorrow-str"></span>)</button>
         </div>
@@ -56,25 +57,30 @@
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300 shadow-sm block"></span><span class="text-gray-500">未釋出</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-white border border-emerald-500 shadow-sm block"></span><span class="text-emerald-700">可預約</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-50 border border-amber-400 shadow-sm block"></span><span class="text-amber-700">我的專屬</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">我的預約</span></div>
-            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-500 border border-indigo-600 shadow-sm block"></span><span class="text-indigo-700">已被預約</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-50 border border-purple-300 shadow-sm block"></span><span class="text-purple-600">來賓保留</span></div>
         </div>
 
-        <!-- 停車場主視圖 (預設開啟模糊背景) -->
+        <!-- 停車場主視圖 (恢復最穩定的相對排版) -->
         <main class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative blur-bg transition-all duration-700 w-full" id="scroll-area">
             <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none"><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#e2e8f0" stroke-width="20%" /><rect x="10%" y="50" width="80%" height="calc(100% - 100px)" rx="50" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 6" /></svg>
-            <div class="relative z-10 w-full flex justify-between px-3 py-12 h-max">
-                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">Entrance &darr;</div></div>
-                <div id="zone-A" class="flex flex-col gap-2 w-[26%] my-6"></div>
-                <div class="w-[4%] flex justify-center"><div class="w-2 bg-slate-300/80 rounded-full my-12 shadow-inner"></div></div>
-                <div id="zone-B" class="flex flex-col gap-2 w-[26%] my-6"></div>
-                <div class="w-[20%] relative"><div class="sticky top-[40vh] flex items-center justify-center writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">&uarr; Exit</div></div>
+            <div class="relative z-10 w-full flex justify-between px-2 py-10 h-max">
+                <!-- 左側車道 18% -->
+                <div class="w-[18%] flex justify-center"><div class="sticky top-[40vh] h-max writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">Entrance &darr;</div></div>
+                <!-- A區 28% -->
+                <div id="zone-A" class="flex flex-col gap-2 w-[28%] my-6"></div>
+                <!-- 中央走道 4% -->
+                <div class="w-[4%] flex justify-center"><div class="w-1.5 bg-slate-300/80 rounded-full my-12 shadow-inner"></div></div>
+                <!-- B區 28% -->
+                <div id="zone-B" class="flex flex-col gap-2 w-[28%] my-6"></div>
+                <!-- 右側車道 18% -->
+                <div class="w-[18%] flex justify-center"><div class="sticky top-[40vh] h-max writing-vertical text-slate-400 font-bold text-[10px] opacity-60 tracking-[0.3em] uppercase">&uarr; Exit</div></div>
             </div>
         </main>
 
         <!-- 底部導航列 -->
         <nav class="bg-white border-t border-gray-100 flex justify-around p-2 pb-5 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] z-20 shrink-0 w-full">
-            <button class="flex-1 flex flex-col items-center text-indigo-600 transition-colors hover:text-indigo-800" onclick="switchMainTab('map')">
+            <button class="flex-1 flex flex-col items-center text-indigo-600 transition-colors hover:text-indigo-800" onclick="switchMainTab()">
                 <svg class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 <span class="text-[10px] font-extrabold tracking-wide">停車地圖</span>
             </button>
@@ -94,7 +100,7 @@
     </div>
 
     <!-- 首次登入視窗 -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 z-[100] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-white/20">
             <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -125,7 +131,7 @@
     </div>
 
     <!-- 強制變更密碼視窗 -->
-    <div id="force-password-modal" class="fixed inset-0 bg-slate-900/60 z-[110] flex flex-col items-center justify-center p-6 backdrop-blur-sm hidden fade-in">
+    <div id="force-password-modal" class="fixed inset-0 bg-slate-900/60 z-[110] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative border border-white/20">
             <div class="bg-gradient-to-br from-rose-600 to-rose-800 p-8 text-center relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -153,11 +159,11 @@
     </div>
 
     <!-- 個人設定視窗 -->
-    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 z-[120] hidden flex-col items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 z-[120] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative flex flex-col">
             <div class="p-5 bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-base flex justify-between items-center shrink-0">
                 <span class="flex items-center gap-2"><svg class="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> 個人設定</span>
-                <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="text-slate-300 hover:text-white"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                <button onclick="document.getElementById('settings-modal').style.display='none'" class="text-slate-300 hover:text-white"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
             </div>
             <div class="p-7 space-y-4 bg-slate-50/50 overflow-y-auto">
                 <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl mb-4">
@@ -179,15 +185,15 @@
         </div>
     </div>
 
-    <!-- 報表明細視窗 (已修復捲動問題) -->
-    <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] hidden flex-col slide-in-bottom h-[100dvh]">
+    <!-- 報表明細視窗 (極簡化結構，保證可捲動) -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-100 z-[70] flex-col slide-in-bottom" style="display: none;">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="font-bold text-sm text-slate-300">返回</button>
+            <button onclick="document.getElementById('report-modal').style.display='none'" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide" id="report-title">預約明細表</h2>
             <button onclick="exportCSV()" class="bg-indigo-600/90 px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm border border-indigo-400/50">匯出 CSV</button>
         </header>
         
-        <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0 z-10">
+        <div class="bg-white p-3.5 border-b shadow-sm flex items-center justify-between shrink-0">
             <span class="text-xs font-extrabold text-slate-600">篩選狀態：</span>
             <select id="report-filter" class="text-xs border border-slate-200 rounded-lg p-2 outline-none bg-slate-50 font-bold" onchange="showDailyReport()">
                 <option value="all">全部車位</option>
@@ -198,32 +204,32 @@
             </select>
         </div>
         
-        <!-- 修復 Flexbox 高度溢出導致無法捲動的問題 -->
-        <div class="flex-1 overflow-hidden p-3 flex flex-col">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-hidden flex flex-col relative w-full">
-                <div class="flex-1 overflow-y-auto overflow-x-auto no-scrollbar w-full">
-                    <table class="min-w-full text-xs text-left">
-                        <thead class="bg-slate-50 text-slate-500 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
+        <!-- 表格捲動區域 -->
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="w-full overflow-x-auto no-scrollbar">
+                    <table class="min-w-full text-xs text-left whitespace-nowrap">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
                             <tr>
-                                <th class="py-3.5 px-2 font-bold w-[12%] text-center whitespace-nowrap">車位</th>
-                                <th class="py-3.5 px-2 font-bold w-[18%] whitespace-nowrap">狀態</th>
-                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">持有者</th>
-                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">預約者</th>
-                                <th class="py-3.5 px-2 font-bold w-[20%] whitespace-nowrap">實際車號</th>
+                                <th class="py-3.5 px-2 font-bold w-[12%] text-center">車位</th>
+                                <th class="py-3.5 px-2 font-bold w-[18%]">狀態</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%]">持有者</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%]">預約者</th>
+                                <th class="py-3.5 px-2 font-bold w-[20%]">實際車號</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50" id="report-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-100" id="report-tbody"></tbody>
                     </table>
                 </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-3 mb-1 shrink-0">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-2">※ 詳細釋出與預約時間，請使用匯出CSV檢視。</p>
         </div>
     </div>
 
-    <!-- 總務後台視窗 (已修復捲動問題) -->
-    <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] hidden flex-col slide-in-bottom h-[100dvh]">
+    <!-- 總務後台視窗 (極簡化結構，保證可捲動) -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-100 z-[80] flex-col slide-in-bottom" style="display: none;">
         <header class="bg-gradient-to-r from-rose-700 to-rose-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="font-bold text-sm text-rose-200">返回</button>
+            <button onclick="document.getElementById('admin-modal').style.display='none'" class="font-bold text-sm text-rose-200">返回</button>
             <h2 class="text-base font-black tracking-wide">總務管理中心</h2>
             <div class="flex gap-2">
                 <button onclick="document.getElementById('csv-upload').click()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">匯入Users</button>
@@ -231,7 +237,7 @@
                 <button onclick="showHistoryPanel()" class="bg-white/10 px-2 py-1 rounded text-xs font-bold border border-white/20">歷史紀錄</button>
             </div>
         </header>
-        <div class="bg-white p-2 border-b shadow-sm flex justify-between items-center shrink-0 z-10">
+        <div class="bg-white p-2 border-b shadow-sm flex justify-between items-center shrink-0">
             <span class="text-xs font-extrabold text-slate-600 ml-2">車位管理 (今日)</span>
             <div class="flex gap-2">
                 <button onclick="exportAdminSpots()" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">匯出車位</button>
@@ -239,34 +245,34 @@
             </div>
         </div>
         
-        <!-- 修復 Flexbox 高度溢出導致無法捲動的問題 -->
-        <div class="flex-1 overflow-hidden p-3 flex flex-col">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-hidden flex flex-col relative w-full">
-                <div class="flex-1 overflow-y-auto overflow-x-auto no-scrollbar w-full">
-                    <table class="min-w-full text-xs text-left">
-                        <thead class="bg-rose-50/50 text-rose-900 border-b border-rose-100 sticky top-0 z-10 shadow-sm">
+        <!-- 表格捲動區域 -->
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="w-full overflow-x-auto no-scrollbar">
+                    <table class="min-w-full text-xs text-left whitespace-nowrap">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
                             <tr>
-                                <th class="py-3.5 px-2 font-bold w-[15%] text-center whitespace-nowrap">車位</th>
-                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">工號</th>
-                                <th class="py-3.5 px-2 font-bold w-[25%] whitespace-nowrap">姓名</th>
-                                <th class="py-3.5 px-2 font-bold w-[20%] whitespace-nowrap">車號</th>
-                                <th class="py-3.5 px-2 font-bold w-[15%] text-center whitespace-nowrap">操作</th>
+                                <th class="py-3.5 px-2 font-bold w-[15%] text-center">車位</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%]">工號</th>
+                                <th class="py-3.5 px-2 font-bold w-[25%]">姓名</th>
+                                <th class="py-3.5 px-2 font-bold w-[20%]">車號</th>
+                                <th class="py-3.5 px-2 font-bold w-[15%] text-center">操作</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50" id="admin-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-100" id="admin-tbody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 歷史紀錄查詢視窗 (已修復捲動問題) -->
-    <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] hidden flex-col slide-in-bottom h-[100dvh]">
+    <!-- 歷史紀錄查詢視窗 (極簡化結構，保證可捲動) -->
+    <div id="history-modal" class="fixed inset-0 bg-slate-100 z-[85] flex-col slide-in-bottom" style="display: none;">
         <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 shadow-lg flex justify-between items-center shrink-0">
-            <button onclick="document.getElementById('history-modal').classList.add('hidden')" class="font-bold text-sm text-slate-300">返回</button>
+            <button onclick="document.getElementById('history-modal').style.display='none'" class="font-bold text-sm text-slate-300">返回</button>
             <h2 class="text-base font-black tracking-wide">系統歷史紀錄</h2><div class="w-16"></div>
         </header>
-        <div class="bg-white p-3 border-b shadow-sm flex flex-col gap-2 shrink-0 z-10">
+        <div class="bg-white p-3 border-b shadow-sm flex flex-col gap-2 shrink-0">
             <div class="flex gap-2 items-center">
                 <input type="date" id="history-start" class="text-xs border rounded p-1.5 flex-1 outline-none focus:ring-1 focus:ring-indigo-500">
                 <span class="text-xs text-gray-500 font-bold">至</span>
@@ -289,33 +295,33 @@
             </div>
         </div>
         
-        <!-- 修復 Flexbox 高度溢出導致無法捲動的問題 -->
-        <div class="flex-1 overflow-hidden p-3 flex flex-col">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-hidden flex flex-col relative w-full">
-                <div class="flex-1 overflow-y-auto overflow-x-auto no-scrollbar w-full">
-                    <table class="min-w-full text-xs text-left">
-                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0 z-10 shadow-sm">
+        <!-- 表格捲動區域 -->
+        <div class="flex-1 overflow-y-auto p-3 no-scrollbar pb-20">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="w-full overflow-x-auto no-scrollbar">
+                    <table class="min-w-full text-xs text-left whitespace-nowrap">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 sticky top-0 shadow-sm">
                             <tr>
-                                <th class="py-3 px-2 font-bold whitespace-nowrap">發生時間</th>
-                                <th class="py-3 px-2 font-bold whitespace-nowrap">目標</th>
-                                <th class="py-3 px-2 font-bold whitespace-nowrap">動作</th>
-                                <th class="py-3 px-2 font-bold whitespace-nowrap">操作者</th>
+                                <th class="py-3 px-2 font-bold">發生時間</th>
+                                <th class="py-3 px-2 font-bold">目標</th>
+                                <th class="py-3 px-2 font-bold">動作</th>
+                                <th class="py-3 px-2 font-bold">操作者</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-50" id="history-tbody"></tbody>
+                        <tbody class="divide-y divide-slate-100" id="history-tbody"></tbody>
                     </table>
                 </div>
             </div>
-            <p class="text-[10px] font-bold text-slate-400 text-center mt-3 mb-1 shrink-0">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
+            <p class="text-[10px] font-bold text-slate-400 text-center mt-4 mb-2">僅顯示最新 1000 筆紀錄，完整紀錄請至資料庫查看。</p>
         </div>
     </div>
 
     <!-- 後台編輯視窗 -->
-    <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <div id="admin-edit-modal" class="fixed inset-0 bg-slate-900/60 z-[90] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col max-h-full">
             <div class="p-5 bg-gradient-to-r from-rose-600 to-rose-700 text-white font-bold text-base flex justify-between items-center shrink-0">
                 <span id="admin-modal-title">編輯車位資料</span>
-                <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="text-white hover:text-rose-200">&times;</button>
+                <button onclick="document.getElementById('admin-edit-modal').style.display='none'" class="text-white hover:text-rose-200">&times;</button>
             </div>
             <div class="p-6 space-y-4 bg-slate-50/50 flex-1 overflow-y-auto no-scrollbar">
                 <div id="edit-sys-id-container" class="hidden">
@@ -333,7 +339,7 @@
             <div class="p-4 bg-white flex justify-between rounded-b-3xl border-t border-slate-100 shrink-0">
                 <button id="btn-delete-spot" onclick="deleteSpotConfig()" class="px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl hover:bg-rose-100 hidden">刪除</button>
                 <div class="flex justify-end gap-3 w-full">
-                    <button onclick="document.getElementById('admin-edit-modal').classList.add('hidden')" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
+                    <button onclick="document.getElementById('admin-edit-modal').style.display='none'" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">取消</button>
                     <button onclick="saveSpotConfig()" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-md shadow-rose-200 transition-colors">儲存</button>
                 </div>
             </div>
@@ -341,7 +347,7 @@
     </div>
 
     <!-- 共用 Alert Modal -->
-    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 z-[130] hidden flex items-center justify-center p-6 backdrop-blur-sm fade-in">
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 z-[130] flex-col items-center justify-center p-6 backdrop-blur-sm fade-in" style="display: none;">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col max-h-full">
             <div id="modal-header" class="p-5 text-white font-black text-base tracking-wide shrink-0">提示</div>
             <div class="p-7 bg-slate-50/50 flex-1 overflow-y-auto no-scrollbar">
@@ -384,7 +390,7 @@
         let db = { today: [], tomorrow: [] };
         let allHistoryLogs = []; 
 
-        // 取得本機模擬識別碼 (為了讓電腦版測試時，記住當下的登入狀態)
+        // 取得本機模擬識別碼
         function getLocalSimId() {
             let id = localStorage.getItem("simLineId");
             if (!id || !id.startsWith("SIM_")) {
@@ -409,7 +415,7 @@
         function showSettingsPanel() {
             document.getElementById('settings-user-info').innerText = `${currentUserName} (工號: ${currentUserEmpId})`;
             document.getElementById('new-password').value = '';
-            document.getElementById('settings-modal').classList.remove('hidden');
+            document.getElementById('settings-modal').style.display = 'flex';
         }
 
         // ==========================================
@@ -472,8 +478,8 @@
         };
 
         function unlockUI() {
-            document.getElementById('force-password-modal').classList.add('hidden');
-            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('force-password-modal').style.display = 'none';
+            document.getElementById('login-modal').style.display = 'none';
             document.getElementById('scroll-area').classList.remove('blur-bg');
             document.getElementById('status-dot').classList.replace('bg-rose-400', 'bg-emerald-400');
             document.getElementById('status-dot').classList.replace('bg-amber-400', 'bg-emerald-400');
@@ -507,15 +513,15 @@
                         isViewer = (currentUserEmpId === 'VIEWER');
 
                         if (res.user.requirePasswordChange && !isAdmin && !isViewer) {
-                            document.getElementById('login-modal').classList.add('hidden');
-                            document.getElementById('force-password-modal').classList.remove('hidden');
+                            document.getElementById('login-modal').style.display = 'none';
+                            document.getElementById('force-password-modal').style.display = 'flex';
                         } else {
                             unlockUI();
                         }
                     } else {
                         if (!currentUserEmpId) {
                             document.getElementById('header-status-text').innerText = "請先登入";
-                            document.getElementById('login-modal').classList.remove('hidden');
+                            document.getElementById('login-modal').style.display = 'flex';
                             document.getElementById('scroll-area').classList.add('blur-bg');
                         } else {
                             unlockUI(); 
@@ -526,7 +532,7 @@
                 }
             } catch (err) {
                 document.getElementById('header-status-text').innerText = "連線失敗";
-                document.getElementById('login-modal').classList.remove('hidden');
+                document.getElementById('login-modal').style.display = 'flex';
                 
                 const errorMsg = document.getElementById('login-error-msg');
                 errorMsg.innerHTML = `<div class="bg-rose-50 text-rose-500 text-xs font-bold text-center p-3 rounded-lg shadow-sm mt-2">❌ 網路連線失敗，請檢查網路狀態。</div>`;
@@ -561,8 +567,8 @@
                 isViewer = (currentUserEmpId === 'VIEWER');
                 
                 if (res.requirePasswordChange && !isAdmin && !isViewer) {
-                    document.getElementById('login-modal').classList.add('hidden');
-                    document.getElementById('force-password-modal').classList.remove('hidden');
+                    document.getElementById('login-modal').style.display = 'none';
+                    document.getElementById('force-password-modal').style.display = 'flex';
                 } else {
                     unlockUI();
                 }
@@ -610,7 +616,7 @@
             
             const res = await apiRequest("changePassword", { newPassword: newPwd });
             if (res.success) {
-                document.getElementById('settings-modal').classList.add('hidden');
+                document.getElementById('settings-modal').style.display = 'none';
                 showModal('密碼變更成功', '您的密碼已成功更新。<br><span class="text-xs text-slate-500">下次登入時請使用新密碼。</span>', 'success', null, '關閉');
             } else {
                 showModal('錯誤', res.message, 'error');
@@ -663,7 +669,7 @@
 
                 if(isAdmin || isViewer) { colorClass += " cursor-pointer hover:opacity-80"; }
 
-                btn.className = `relative w-full h-[38px] rounded-md border-2 flex items-center justify-center text-center transition-all ${shapeClass} ${colorClass} overflow-hidden`;
+                btn.className = `relative w-full h-[40px] rounded-md border-2 flex items-center justify-center text-center transition-all ${shapeClass} ${colorClass} overflow-hidden`;
                 btn.innerHTML = contentHTML;
                 btn.onclick = () => handleSpotClick(spot);
                 document.getElementById(`zone-${spot.zone}`).appendChild(btn);
@@ -765,7 +771,16 @@
         // ==========================================
         // 選單與報表邏輯
         // ==========================================
-        function switchMainTab() { hideModal(); document.getElementById('report-modal').classList.add('hidden'); document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('history-modal').classList.add('hidden'); }
+        function hideAllPanels() {
+            document.getElementById('report-modal').style.display = 'none';
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('history-modal').style.display = 'none';
+        }
+
+        function switchMainTab() { 
+            hideModal(); 
+            hideAllPanels();
+        }
 
         function showMyReservation() {
             if (!currentUserEmpId) return;
@@ -823,10 +838,11 @@
                 let actualPlate = (spot.status === 'fixed' || spot.status === 'guest') ? spot.ownerPlate : (isReserved ? (spot.reserverPlate || spot.myPlate) : '-');
                 let reserverDisplay = spot.reserverId ? `<span class="font-bold text-indigo-700">${spot.reserverName}</span><br><span class="text-[9px] text-slate-400 font-mono">${spot.reserverId}</span>` : '<span class="text-slate-300">-</span>';
 
-                tr.innerHTML = `<td class="py-3 px-2 text-center font-black text-slate-700 border-b border-slate-50 text-sm">${spot.displayId || spot.id}</td><td class="py-3 px-2 border-b border-slate-50">${statusBadge}</td><td class="py-3 px-2 text-slate-600 border-b border-slate-50 leading-tight font-medium">${spot.ownerName}<br><span class="text-[9px] text-slate-400 font-mono">${spot.ownerId}</span></td><td class="py-3 px-2 border-b border-slate-50 leading-tight">${reserverDisplay}</td><td class="py-3 px-2 text-slate-600 border-b border-slate-50 font-mono font-bold text-xs">${actualPlate}</td>`;
+                tr.innerHTML = `<td class="py-3.5 px-2 text-center font-black text-slate-700 border-b border-slate-50 text-sm">${spot.displayId || spot.id}</td><td class="py-3.5 px-2 border-b border-slate-50">${statusBadge}</td><td class="py-3.5 px-2 text-slate-600 border-b border-slate-50 leading-tight font-medium">${spot.ownerName}<br><span class="text-[9px] text-slate-400 font-mono">${spot.ownerId}</span></td><td class="py-3.5 px-2 border-b border-slate-50 leading-tight">${reserverDisplay}</td><td class="py-3.5 px-2 text-slate-600 border-b border-slate-50 font-mono font-bold text-xs">${actualPlate}</td>`;
                 tbody.appendChild(tr);
             });
-            document.getElementById('report-modal').classList.remove('hidden');
+            
+            document.getElementById('report-modal').style.display = 'flex';
         }
 
         function exportCSV() {
@@ -871,9 +887,9 @@
             tbody.innerHTML = ''; 
             (db.today || []).forEach(spot => {
                 const isGuest = spot.ownerId === 'GUEST';
-                tbody.innerHTML += `<tr><td class="py-3 px-2 text-center font-black text-rose-700 border-b border-slate-100">${spot.displayId || spot.id}</td><td class="py-3 px-2 text-slate-500 font-mono text-[10px] border-b border-slate-100">${isGuest?'-':spot.ownerId}</td><td class="py-3 px-2 font-bold text-slate-700 border-b border-slate-100">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-3 px-2 text-slate-500 font-mono text-xs border-b border-slate-100">${spot.ownerPlate}</td><td class="py-3 px-2 text-center border-b border-slate-100"><button onclick="openEditModal('${spot.sysId || spot.id}', false)" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-[10px] font-black border border-rose-200 hover:bg-rose-100 transition-colors">編輯</button></td></tr>`;
+                tbody.innerHTML += `<tr><td class="py-3.5 px-2 text-center font-black text-rose-700 border-b border-slate-100">${spot.displayId || spot.id}</td><td class="py-3.5 px-2 text-slate-500 font-mono text-[10px] border-b border-slate-100">${isGuest?'-':spot.ownerId}</td><td class="py-3.5 px-2 font-bold text-slate-700 border-b border-slate-100">${isGuest?'來賓專用':spot.ownerName}</td><td class="py-3.5 px-2 text-slate-500 font-mono text-xs border-b border-slate-100">${spot.ownerPlate}</td><td class="py-3.5 px-2 text-center border-b border-slate-100"><button onclick="openEditModal('${spot.sysId || spot.id}', false)" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-[10px] font-black border border-rose-200 hover:bg-rose-100 transition-colors">編輯</button></td></tr>`;
             });
-            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-modal').style.display = 'flex';
         }
 
         function exportAdminSpots() {
@@ -923,7 +939,7 @@
             }
 
             typeSelect.onchange = (e) => { if(e.target.value === 'guest') empFields.classList.add('hidden'); else empFields.classList.remove('hidden'); };
-            document.getElementById('admin-edit-modal').classList.remove('hidden');
+            document.getElementById('admin-edit-modal').style.display = 'flex';
         }
 
         async function saveSpotConfig() {
@@ -949,7 +965,7 @@
             const res = await apiRequest(action, { spotId: finalSysId, displayId: displayId, type: type, ownerId: ownerId, ownerName: ownerName, ownerPlate: plate });
             
             if (res.success) {
-                document.getElementById('admin-edit-modal').classList.add('hidden');
+                document.getElementById('admin-edit-modal').style.display = 'none';
                 await fetchCloudData(); 
                 showAdminPanel();
             } else { showModal('儲存失敗', res.message, 'error'); }
@@ -959,7 +975,7 @@
             showModal("刪除車位", `確定要永久刪除車位 <b>${editingSpotId}</b> 嗎？`, "error", async () => {
                 const res = await apiRequest("adminDeleteSpot", { spotId: editingSpotId });
                 if (res.success) {
-                    document.getElementById('admin-edit-modal').classList.add('hidden');
+                    document.getElementById('admin-edit-modal').style.display = 'none';
                     await fetchCloudData();
                     showAdminPanel();
                 } else {
@@ -1002,16 +1018,17 @@
         // 歷史紀錄相關邏輯
         async function showHistoryPanel() {
             if (!isAdmin) return;
+            switchMainTab();
             const tbody = document.getElementById('history-tbody');
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-slate-400 font-bold">載入中...</td></tr>';
-            document.getElementById('history-modal').classList.remove('hidden');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center py-6 text-slate-400 font-bold">載入中...</td></tr>';
+            document.getElementById('history-modal').style.display = 'flex';
 
             const res = await fetchWithRetry(`${GAS_API_URL}?action=getHistory&lineUserId=${currentUserLineId}`, { method: 'GET', mode: 'cors' });
             if (res.success) {
                 allHistoryLogs = res.logs || [];
                 renderHistoryTable(allHistoryLogs);
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-rose-500 py-6 font-bold">載入失敗: ${res.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-rose-500 py-6 font-bold">載入失敗: ${res.message}</td></tr>`;
             }
         }
 
@@ -1062,10 +1079,10 @@
                 let dateTabColor = log.dateTab === 'today' ? 'text-blue-500' : (log.dateTab === 'tomorrow' ? 'text-teal-500' : 'text-gray-500');
                 
                 tbody.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                    <td class="py-2.5 px-2 text-[9px] text-slate-400 font-mono">${log.timestamp}</td>
-                    <td class="py-2.5 px-2 font-bold text-slate-700">${log.displayId}<br><span class="text-[8px] text-slate-400 font-mono font-normal">Sys:${log.sysId || '-'}</span></td>
-                    <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-black border ${actionColor}">${log.action}</span><br><span class="text-[8px] font-black ${dateTabColor}">${displayDateTab}</span></td>
-                    <td class="py-2.5 px-2 text-slate-600 font-bold leading-tight">${log.actor}<br><span class="text-[9px] text-slate-400 font-normal block truncate w-24">${log.details}</span></td>
+                    <td class="py-3 px-2 text-[9px] text-slate-400 font-mono">${log.timestamp}</td>
+                    <td class="py-3 px-2 font-bold text-slate-700">${log.displayId}<br><span class="text-[8px] text-slate-400 font-mono font-normal">Sys:${log.sysId || '-'}</span></td>
+                    <td class="py-3 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-black border ${actionColor}">${log.action}</span><br><span class="text-[8px] font-black ${dateTabColor}">${displayDateTab}</span></td>
+                    <td class="py-3 px-2 text-slate-600 font-bold leading-tight">${log.actor}<br><span class="text-[9px] text-slate-400 font-normal block truncate w-24">${log.details}</span></td>
                 </tr>`;
             });
         }
@@ -1130,15 +1147,15 @@
             if (showPlateInput) { document.getElementById('plate-input-container').classList.remove('hidden'); document.getElementById('modal-plate-input').value = ''; document.getElementById('modal-plate-error').classList.add('hidden'); } 
             else { document.getElementById('plate-input-container').classList.add('hidden'); }
 
-            modalHeader.className = 'p-5 text-white font-black text-base tracking-wide ' + (type === 'error' ? 'bg-gradient-to-r from-rose-500 to-rose-600' : type === 'warning' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : type === 'success' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gradient-to-r from-indigo-600 to-indigo-700');
+            modalHeader.className = 'p-5 text-white font-black text-base tracking-wide shrink-0 ' + (type === 'error' ? 'bg-gradient-to-r from-rose-500 to-rose-600' : type === 'warning' ? 'bg-gradient-to-r from-amber-400 to-amber-500' : type === 'success' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gradient-to-r from-indigo-600 to-indigo-700');
             confirmBtn.className = 'px-5 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-all ' + (type === 'error' ? 'bg-rose-500 hover:bg-rose-600 shadow-rose-200' : type === 'warning' ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200' : type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200');
 
             if (confirmAction) { cancelBtn.classList.remove('hidden'); currentConfirmAction = confirmAction; } 
             else { cancelBtn.classList.add('hidden'); currentConfirmAction = null; }
-            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
 
-        function hideModal() { modal.classList.add('hidden'); currentConfirmAction = null; }
+        function hideModal() { modal.style.display = 'none'; currentConfirmAction = null; }
         confirmBtn.onclick = () => { if (currentConfirmAction) { if (currentConfirmAction() !== false) hideModal(); } else { hideModal(); } };
         cancelBtn.onclick = hideModal;
 
